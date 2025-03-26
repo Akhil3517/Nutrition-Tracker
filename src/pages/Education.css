@@ -1,0 +1,180 @@
+
+.education-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.education-container {
+  flex: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 50px 20px;
+}
+
+.education-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.education-header h1 {
+  font-size: 2.5rem;
+  color: var(--text-color);
+  margin-bottom: 15px;
+}
+
+.education-header p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.education-section {
+  margin-bottom: 60px;
+}
+
+.education-section h2 {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.education-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background-color: var(--accent-color);
+}
+
+.education-card {
+  display: flex;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.education-icon {
+  font-size: 2.5rem;
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+
+.education-info {
+  flex: 1;
+}
+
+.education-info h3 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.education-info p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.education-info p:last-child {
+  margin-bottom: 0;
+}
+
+.nutrition-label-guide {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 25px;
+}
+
+.guide-point {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.guide-point:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.guide-point h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.guide-point p {
+  color: #555;
+  line-height: 1.5;
+}
+
+.hydration-info {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 25px;
+}
+
+.hydration-info > p {
+  margin-bottom: 25px;
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.hydration-tips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.tip {
+  padding: 20px;
+  background-color: var(--gray-light);
+  border-radius: 8px;
+}
+
+.tip h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.tip p {
+  color: #555;
+  line-height: 1.5;
+}
+
+.tip ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+
+.tip ul li {
+  margin-bottom: 8px;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .education-card {
+    flex-direction: column;
+  }
+  
+  .education-icon {
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+  
+  .hydration-tips {
+    grid-template-columns: 1fr;
+  }
+}

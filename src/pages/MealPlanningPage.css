@@ -1,0 +1,129 @@
+
+.meal-planning-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+.meal-planning-content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  margin-left: 250px;
+}
+
+.meal-planning-header {
+  margin-bottom: 2rem;
+}
+
+.meal-planning-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--foreground));
+}
+
+.meal-planning-header p {
+  margin-bottom: 1rem;
+}
+
+.deficiency-alerts {
+  margin-bottom: 2rem;
+}
+
+.deficiency-alerts h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: hsl(var(--foreground));
+}
+
+.deficiency-alert {
+  margin-bottom: 0.75rem;
+}
+
+.weekly-plan-container {
+  background-color: hsl(var(--card));
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  border: 1px solid hsl(var(--border));
+}
+
+.weekly-plan-container h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  color: hsl(var(--foreground));
+}
+
+.week-days {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.day-plan {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: hsl(var(--background));
+}
+
+.day-plan h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: hsl(var(--primary));
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .meal-planning-content {
+    margin-left: 60px;
+    padding: 1rem;
+  }
+  
+  .meal-planning-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .weekly-plan-container {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .meal-planning-content {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .week-days {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .meal-planning-content {
+    padding: 2rem;
+  }
+  
+  .week-days {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .week-days {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1536px) {
+  .week-days {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

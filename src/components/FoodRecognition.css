@@ -1,0 +1,260 @@
+
+.food-recognition {
+  margin-bottom: 30px;
+}
+
+.food-recognition-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.camera-preview {
+  width: 100%;
+  height: 250px;
+  border: 2px dashed var(--gray-medium);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  overflow: hidden;
+  background-color: var(--gray-light);
+}
+
+.dark .camera-preview {
+  border-color: hsl(var(--border));
+  background-color: hsl(var(--muted));
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.camera-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #777;
+}
+
+.dark .camera-placeholder {
+  color: hsl(var(--muted-foreground));
+}
+
+.camera-placeholder span {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.weight-input-container {
+  width: 100%;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.weight-input-container label {
+  color: var(--text-color);
+}
+
+.dark .weight-input-container label {
+  color: hsl(var(--foreground));
+}
+
+.weight-input {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  width: 100px;
+  text-align: center;
+  background-color: white;
+  color: var(--text-color);
+}
+
+.dark .weight-input {
+  background-color: hsl(var(--input));
+  border-color: hsl(var(--border));
+  color: hsl(var(--foreground));
+}
+
+.food-weight-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.food-weight-control label {
+  color: var(--text-color);
+}
+
+.dark .food-weight-control label {
+  color: hsl(var(--foreground));
+}
+
+.btn-sm {
+  padding: 8px 12px;
+  font-size: 0.85rem;
+}
+
+.camera-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.upload-btn-wrapper input[type=file] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.camera-icon {
+  margin-right: 5px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.dark .loading {
+  color: hsl(var(--primary));
+}
+
+.loading:before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 3px solid var(--gray-medium);
+  border-top: 3px solid var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.dark .loading:before {
+  border-color: hsl(var(--muted));
+  border-top-color: hsl(var(--primary));
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error {
+  color: var(--danger-color);
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.dark .error {
+  color: hsl(var(--destructive));
+}
+
+.recognized-foods-container {
+  width: 100%;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: var(--gray-light);
+}
+
+.dark .recognized-foods-container {
+  background-color: hsl(var(--muted));
+}
+
+.recognized-foods-container h3 {
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+  color: var(--text-color);
+}
+
+.dark .recognized-foods-container h3 {
+  color: hsl(var(--foreground));
+}
+
+.recognized-foods-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.recognized-food-card {
+  flex: 1 1 calc(50% - 15px);
+  min-width: 300px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dark .recognized-food-card {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.recognized-food-info {
+  flex: 1;
+}
+
+.recognized-food-info h4 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.dark .recognized-food-info h4 {
+  color: hsl(var(--card-foreground));
+}
+
+.nutrition-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.nutrition-fact {
+  background-color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dark .nutrition-fact {
+  background-color: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.nutrition-fact .label {
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}

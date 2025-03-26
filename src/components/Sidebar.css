@@ -1,0 +1,83 @@
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: var(--primary-color);
+  color: var(--text-light);
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px 0;
+  overflow-y: auto;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-header {
+  padding: 0 20px;
+  margin-bottom: 30px;
+}
+
+.sidebar-header h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.sidebar-menu {
+  list-style: none;
+}
+
+.sidebar-menu li {
+  width: 100%;
+}
+
+.sidebar-menu li a {
+  display: block;
+  padding: 15px 20px;
+  color: var(--text-light);
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-menu li a:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease;
+}
+
+.sidebar-menu li a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--accent-color);
+  transform: translateX(3px);
+}
+
+.sidebar-menu li a:hover:before {
+  width: 100%;
+}
+
+.sidebar-menu li.active a {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-left: 4px solid var(--accent-color);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+    overflow: hidden;
+  }
+  
+  .sidebar-header h2 {
+    display: none;
+  }
+  
+  .sidebar-menu li a {
+    text-align: center;
+    padding: 15px 0;
+  }
+}

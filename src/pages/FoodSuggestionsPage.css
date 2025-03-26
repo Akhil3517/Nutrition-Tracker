@@ -1,0 +1,41 @@
+
+.food-suggestions-page {
+  display: flex;
+  min-height: 100vh;
+}
+
+.food-suggestions-content {
+  flex: 1;
+  padding: 30px;
+  margin-left: 250px;
+}
+
+.food-suggestions-header {
+  margin-bottom: 30px;
+}
+
+.food-suggestions-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.food-suggestions-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.food-suggestions-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 25px;
+}
+
+@media (max-width: 768px) {
+  .food-suggestions-content {
+    margin-left: 60px;
+    padding: 15px;
+  }
+}

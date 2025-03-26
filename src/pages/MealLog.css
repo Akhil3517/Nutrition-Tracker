@@ -1,0 +1,111 @@
+
+.meal-log-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--gray-light);
+}
+
+.dark .meal-log-page {
+  background-color: hsl(var(--background));
+}
+
+.meal-log-content {
+  flex: 1;
+  padding: 30px;
+  margin-left: 250px;
+}
+
+.meal-log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.meal-log-actions {
+  display: flex;
+  align-items: center;
+}
+
+.meal-log-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.dark .meal-log-header h1 {
+  color: var(--text-light);
+}
+
+.meal-log-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+  text-align: center;
+}
+
+.dark .summary-card {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}
+
+.summary-card h3 {
+  font-size: 1.1rem;
+  color: var(--text-color);
+  margin-bottom: 10px;
+}
+
+.dark .summary-card h3 {
+  color: var(--text-light);
+}
+
+.summary-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent-color);
+}
+
+.dark .summary-value {
+  color: hsl(var(--primary));
+}
+
+.meal-log-details {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 25px;
+}
+
+.dark .meal-log-details {
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+}
+
+@media (max-width: 768px) {
+  .meal-log-content {
+    margin-left: 60px;
+    padding: 15px;
+  }
+  
+  .meal-log-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .date-selector {
+    width: 100%;
+  }
+  
+  .date-selector input {
+    flex: 1;
+  }
+}

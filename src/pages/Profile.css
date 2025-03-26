@@ -1,0 +1,146 @@
+
+.profile-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-container {
+  flex: 1;
+  padding: 50px 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.profile-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.profile-content {
+  margin-bottom: 50px;
+}
+
+.profile-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 30px;
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.profile-info h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.profile-email {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.profile-divider {
+  height: 1px;
+  background-color: var(--border-color);
+}
+
+.nutrition-goals h3 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+.goal-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.goal-item:last-child {
+  border-bottom: none;
+}
+
+.goal-label {
+  font-weight: 500;
+  color: #444;
+}
+
+.goal-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--accent-color);
+}
+
+.profile-form .form-group {
+  margin-bottom: 20px;
+}
+
+.profile-form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.profile-form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.profile-form input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(22, 160, 133, 0.2);
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn-secondary {
+  background-color: var(--gray-medium);
+  color: var(--text-color);
+}
+
+.btn-secondary:hover {
+  background-color: #d0d0d0;
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .profile-card {
+    padding: 20px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions button {
+    width: 100%;
+  }
+}

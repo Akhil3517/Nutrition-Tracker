@@ -1,0 +1,194 @@
+
+.nutrition-tracker {
+  margin-top: 20px;
+}
+
+.tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.tracker-header h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.tracker-content {
+  display: flex;
+  gap: 30px;
+}
+
+.nutrition-summary {
+  flex: 1;
+}
+
+.energy-circles {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.energy-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 15px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  transition: border-color 0.3s ease;
+}
+
+.dark .energy-circle {
+  border-color: #334155; /* Darker border for dark mode */
+}
+
+.energy-circle.highlighted {
+  border-color: #9c27b0; /* Purple highlight color */
+}
+
+.dark .energy-circle.highlighted {
+  border-color: #9c27b0; /* Same highlight for dark mode */
+}
+
+.circle-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.circle-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.circle-unit {
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+.circle-label {
+  position: absolute;
+  bottom: -25px;
+  font-size: 1rem;
+  font-weight: 500;
+  width: 100%;
+  text-align: center;
+}
+
+.nutrition-targets {
+  flex: 2;
+}
+
+.nutrition-targets h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.nutrition-item {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.1rem;
+}
+
+.nutrition-item .label {
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+.nutrition-item .value {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.nutrition-details {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.nutrition-detail-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-weight: 500;
+  align-items: center;
+}
+
+.nutrition-detail-header .target-info {
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.nutrition-detail-header .percentage {
+  width: 40px;
+  text-align: right;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dark .progress-bar {
+  background-color: #334155; /* Darker background for progress bar in dark mode */
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--accent-color);
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* Dark mode specific styles */
+.dark .card {
+  background-color: var(--card);
+  color: var(--card-foreground);
+}
+
+.dark .section-title {
+  color: var(--text-light);
+}
+
+@media (max-width: 992px) {
+  .tracker-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .energy-circles {
+    justify-content: space-evenly;
+  }
+}
+
+@media (max-width: 768px) {
+  .energy-circles {
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+  
+  .energy-circle {
+    width: 100px;
+    height: 100px;
+    border-width: 12px;
+  }
+  
+  .circle-value {
+    font-size: 1.2rem;
+  }
+  
+  .nutrition-summary {
+    margin-bottom: 30px;
+  }
+}

@@ -1,0 +1,99 @@
+
+.food-suggestions {
+  padding: 20px;
+}
+
+.food-suggestions h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.suggestion-form {
+  max-width: 600px;
+  margin: 0 auto 30px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(22, 160, 133, 0.2);
+}
+
+.btn-block {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  font-size: 1rem;
+}
+
+.error-message {
+  color: var(--danger-color);
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: rgba(231, 76, 60, 0.1);
+}
+
+.suggestions-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.suggestion-card {
+  display: flex;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.suggestion-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.suggestion-info {
+  padding: 15px;
+  flex: 1;
+}
+
+.suggestion-info h3 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+}
+
+.suggestion-info p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .suggestions-list {
+    grid-template-columns: 1fr;
+  }
+}

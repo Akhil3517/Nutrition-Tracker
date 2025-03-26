@@ -1,0 +1,9 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import our refactored CSS files */
+@import './styles/variables.css';
+@import './styles/base.css';
+@import './styles/utilities.css';
