@@ -1,9 +1,18 @@
-
 #root {
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Responsive padding and margins */
+@media (max-width: 768px) {
+  #root {
+    padding: 0.5rem;
+  }
 }
 
 .logo {
@@ -11,6 +20,13 @@
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms, transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    height: 4em;
+    padding: 1em;
+  }
 }
 
 .logo:hover {
@@ -38,8 +54,18 @@
 }
 
 .card {
-  padding: 2em;
+  padding: 1.5em;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 1rem;
+  width: calc(100% - 2rem);
+}
+
+@media (max-width: 768px) {
+  .card {
+    padding: 1em;
+    margin: 0.5rem;
+    width: calc(100% - 1rem);
+  }
 }
 
 .card:hover {
@@ -67,6 +93,15 @@
 /* Button hover effects */
 button {
   transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.3s ease;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
 }
 
 button:hover {
@@ -81,8 +116,42 @@ button:active {
 /* Link hover effects */
 a {
   transition: color 0.3s ease, transform 0.2s ease;
+  font-size: 1rem;
+}
+
+@media (max-width: 768px) {
+  a {
+    font-size: 0.9rem;
+  }
 }
 
 a:hover {
   color: hsl(var(--primary));
+}
+
+/* Container styles */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.5rem;
+  }
+}
+
+/* Grid layout */
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }

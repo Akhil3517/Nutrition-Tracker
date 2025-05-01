@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from "date-fns";
@@ -13,6 +12,7 @@ import ThemeToggle from '../components/ThemeToggle';
 import FoodRecognition from '../components/FoodRecognition';
 import NutritionTracker from '../components/NutritionTracker';
 import MealList from '../components/MealList';
+import ProfileMenu from '../components/ProfileMenu';
 import { toast } from "../hooks/use-toast";
 import './Dashboard.css';
 
@@ -95,11 +95,6 @@ const Dashboard = () => {
     });
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/login');
-  };
-
   // Filter foods based on selected date
   const foodsForSelectedDate = foods.filter(food => {
     if (!food.date) return false; // Only show foods with dates
@@ -138,51 +133,46 @@ const Dashboard = () => {
                 />
               </PopoverContent>
             </Popover>
-            <button className="btn btn-danger ml-4" onClick={handleLogout}>
-              Logout
-            </button>
+            <div className="ml-4">
+              <ProfileMenu />
+            </div>
           </div>
         </div>
         
-        <div className="food-recognition-section card">
+        <div className="food-recognition-section">
           <h2 className="section-title">Food Recognition</h2>
           <FoodRecognition onFoodRecognized={handleFoodRecognized} />
           
           {recognizedFoods.length > 0 && (
             <div className="recognized-foods-container">
-              <h3>Recognized Foods Summary</h3>
+              <h3>Recognized Foods</h3>
               <div className="recognized-foods-list">
                 {recognizedFoods.map((food, index) => (
                   <div key={index} className="recognized-food-card">
                     <div className="recognized-food-info">
                       <h4>{food.name}</h4>
                       <div className="nutrition-facts">
-                        <div className="nutrition-fact">
-                          <span className="label">Weight:</span>
-                          <span className="value">{food.weight || 100}g</span>
-                        </div>
-                        <div className="nutrition-fact">
+                        <span className="nutrition-fact">
                           <span className="label">Calories:</span>
-                          <span className="value">{food.calories} kcal</span>
-                        </div>
-                        <div className="nutrition-fact">
+                          {food.calories}
+                        </span>
+                        <span className="nutrition-fact">
                           <span className="label">Protein:</span>
-                          <span className="value">{food.protein}g</span>
-                        </div>
-                        <div className="nutrition-fact">
+                          {food.protein}g
+                        </span>
+                        <span className="nutrition-fact">
                           <span className="label">Carbs:</span>
-                          <span className="value">{food.carbs}g</span>
-                        </div>
-                        <div className="nutrition-fact">
+                          {food.carbs}g
+                        </span>
+                        <span className="nutrition-fact">
                           <span className="label">Fat:</span>
-                          <span className="value">{food.fat}g</span>
-                        </div>
+                          {food.fat}g
+                        </span>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-              
               <button className="btn btn-primary mt-4" onClick={addFoodToLog}>
                 Add All to Meal Log
               </button>

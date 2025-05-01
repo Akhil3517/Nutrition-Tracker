@@ -1,4 +1,3 @@
-
 // Detect nutrient deficiencies based on the meal log and user profile
 export const detectDeficiencies = (meals, userProfile) => {
   // Default daily goals if no user profile is provided
@@ -118,5 +117,16 @@ export const calculateMacros = (calories, goal) => {
     protein: Math.round((calories * selectedDistribution.protein) / 4),
     carbs: Math.round((calories * selectedDistribution.carbs) / 4),
     fat: Math.round((calories * selectedDistribution.fat) / 9)
+  };
+};
+
+// Calculate nutrition values based on weight
+export const calculateNutritionByWeight = (nutritionPer100g, weightInGrams) => {
+  return {
+    calories: (nutritionPer100g.calories || 0) * (weightInGrams / 100),
+    protein: (nutritionPer100g.protein || 0) * (weightInGrams / 100),
+    carbs: (nutritionPer100g.carbs || 0) * (weightInGrams / 100),
+    fat: (nutritionPer100g.fat || 0) * (weightInGrams / 100),
+    fiber: (nutritionPer100g.fiber || 0) * (weightInGrams / 100)
   };
 };

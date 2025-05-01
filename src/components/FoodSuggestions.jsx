@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { fetchFoodSuggestions } from '../services/api';
+import { fetchFoodSuggestions } from '../services/api.js';
 import './FoodSuggestions.css';
 
 const FoodSuggestions = () => {
@@ -41,23 +40,40 @@ const FoodSuggestions = () => {
       
       <form onSubmit={handleSubmit} className="suggestion-form">
         <div className="form-group">
-          <input
-            type="text"
-            placeholder="Course (e.g., Main Course, Dessert)"
+          <label htmlFor="course">Course Type</label>
+          <select
+            id="course"
             value={course}
             onChange={(e) => setCourse(e.target.value)}
             className="form-control"
-          />
+            required
+          >
+            <option value="">Select Course</option>
+            <option value="appetizer">Appetizer</option>
+            <option value="main course">Main Course</option>
+            <option value="side dish">Side Dish</option>
+            <option value="dessert">Dessert</option>
+            <option value="breakfast">Breakfast</option>
+            <option value="snack">Snack</option>
+          </select>
         </div>
         
         <div className="form-group">
-          <input
-            type="text"
-            placeholder="Diet (e.g., Vegetarian, Vegan, Non-Vegetarian)"
+          <label htmlFor="diet">Dietary Preference</label>
+          <select
+            id="diet"
             value={diet}
             onChange={(e) => setDiet(e.target.value)}
             className="form-control"
-          />
+            required
+          >
+            <option value="">Select Diet</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="vegan">Vegan</option>
+            <option value="non-vegetarian">Non-Vegetarian</option>
+            <option value="gluten-free">Gluten-Free</option>
+            <option value="keto">Keto</option>
+          </select>
         </div>
         
         <button 
@@ -74,16 +90,17 @@ const FoodSuggestions = () => {
       <div className="suggestions-list">
         {suggestions.map((food, index) => (
           <div key={index} className="suggestion-card">
-            {food.imageUrl && (
-              <img 
-                src={food.imageUrl} 
-                alt={food.name} 
-                className="suggestion-image"
-              />
-            )}
             <div className="suggestion-info">
               <h3>{food.name}</h3>
-              <p>{food.description}</p>
+              <p className="description">{food.description}</p>
+              <div className="ingredients">
+                <h4>Key Ingredients:</h4>
+                <ul>
+                  {food.ingredients.map((ingredient, i) => (
+                    <li key={i}>{ingredient}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         ))}

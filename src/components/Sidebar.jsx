@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
@@ -9,7 +8,9 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <h2>CodeCrew</h2>
+        <Link to="/" className="logo-link">
+          <h2>NutriTrack</h2>
+        </Link>
       </div>
       <ul className="sidebar-menu">
         <li className={location.pathname === '/dashboard' ? 'active' : ''}>

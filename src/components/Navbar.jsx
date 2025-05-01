@@ -9,7 +9,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-brand">
-        <h2>Cuisine Connoisseur</h2>
+        <h2>NutriTrack</h2>
       </div>
       <ul className="navbar-nav">
         <li className={location.pathname === '/' ? 'active' : ''}>
@@ -18,9 +18,9 @@ const Navbar = () => {
         <li className={location.pathname === '/tracker' ? 'active' : ''}>
           <Link to="/tracker">Tracker</Link>
         </li>
-        <li className={location.pathname === '/suggestions' ? 'active' : ''}>
+        {/* <li className={location.pathname === '/suggestions' ? 'active' : ''}>
           <Link to="/suggestions">Food Suggestions</Link>
-        </li>
+        </li> */}
         <li className={location.pathname === '/education' ? 'active' : ''}>
           <Link to="/education">Nutrition Education</Link>
         </li>

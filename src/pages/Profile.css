@@ -1,8 +1,7 @@
-
 .profile-page {
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background);
 }
 
 .profile-container {
@@ -16,24 +15,55 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
 }
 
 .profile-header h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-color);
+  color: var(--foreground);
 }
 
 .profile-content {
-  margin-bottom: 50px;
+  flex: 1;
+  padding: 2rem;
+  margin-left: 250px;
 }
 
-.profile-card {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  padding: 30px;
+.profile-sections {
+  display: grid;
+  gap: 2rem;
+  max-width: 800px;
+}
+
+.profile-info-card,
+.nutrition-goals-card {
+  background-color: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+.user-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nutrition-goals-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.goal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.goal-value {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 .profile-details {
@@ -61,29 +91,6 @@
   font-size: 1.3rem;
   margin-bottom: 20px;
   color: var(--text-color);
-}
-
-.goal-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.goal-item:last-child {
-  border-bottom: none;
-}
-
-.goal-label {
-  font-weight: 500;
-  color: #444;
-}
-
-.goal-value {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--accent-color);
 }
 
 .profile-form .form-group {
@@ -126,10 +133,15 @@
 }
 
 @media (max-width: 768px) {
+  .profile-content {
+    margin-left: 60px;
+    padding: 1rem;
+  }
+
   .profile-header {
     flex-direction: column;
+    gap: 1rem;
     align-items: flex-start;
-    gap: 15px;
   }
   
   .profile-card {

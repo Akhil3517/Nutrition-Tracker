@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -15,6 +14,14 @@ import './MealLog.css';
 const MealLog = () => {
   const [foods, setFoods] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  
+  // Daily nutrition goals (can be customized by user)
+  const nutritionGoals = {
+    calories: 2000,
+    protein: 150,
+    carbs: 200,
+    fat: 65
+  };
   
   useEffect(() => {
     // Load meals from localStorage
@@ -43,7 +50,7 @@ const MealLog = () => {
 
   // Filter foods based on selected date
   const foodsForSelectedDate = foods.filter(food => {
-    if (!food.date) return false; // Only show foods with dates
+    if (!food.date) return false;
     return new Date(food.date).toDateString() === selectedDate.toDateString();
   });
   
@@ -72,7 +79,7 @@ const MealLog = () => {
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-[200px] justify-start text-left font-normal ml-4",
+                    "w-[200px] justify-start text-left font-normal",
                     "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
                   )}
                 >
@@ -95,7 +102,7 @@ const MealLog = () => {
         
         <div className="meal-log-summary">
           <div className="nutrition-totals">
-            <h3>Daily Nutrition Totals</h3>
+            <h3>Daily Nutrition Summary</h3>
             <div className="nutrition-cards">
               <div className="nutrition-card">
                 <div className="nutrition-icon calories-icon">🔥</div>

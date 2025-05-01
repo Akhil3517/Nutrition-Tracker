@@ -1,6 +1,6 @@
-
 import React, { useState, useRef } from 'react';
-import { recognizeFood, calculateNutritionByWeight } from '../services/api';
+import { recognizeFood } from '../services/api';
+import { calculateNutritionByWeight } from '../utils/nutrientUtils';
 import { toast } from "../hooks/use-toast";
 import './FoodRecognition.css';
 
@@ -92,7 +92,11 @@ const FoodRecognition = ({ onFoodRecognized }) => {
       weight: value
     };
     
-    const calculatedFood = calculateNutritionByWeight(updatedFood);
+    const calculatedNutrition = calculateNutritionByWeight(originalFoods[index], value);
+    const calculatedFood = {
+      ...updatedFood,
+      ...calculatedNutrition
+    };
     
     const updatedFoods = [...recognizedFoodsInternal];
     updatedFoods[index] = calculatedFood;
@@ -123,7 +127,7 @@ const FoodRecognition = ({ onFoodRecognized }) => {
       
       const results = await recognizeFood(imageData);
       
-      if (results.length === 0 || (results.length === 1 && results[0].name === 'Unknown Food')) {
+      if (!results.foods || results.foods.length === 0) {
         setError("Could not recognize food in image. Please try another image.");
         toast({
           title: "Recognition Failed",
@@ -132,10 +136,9 @@ const FoodRecognition = ({ onFoodRecognized }) => {
         });
         setRecognizedFoodsInternal([]);
         setOriginalFoods([]);
-        // Reset photo since recognition failed
         resetPhotoAndInputs();
       } else {
-        const originalNutritions = results.map(food => ({
+        const originalNutritions = results.foods.map(food => ({
           ...food,
           weight: 100
         }));
@@ -146,14 +149,12 @@ const FoodRecognition = ({ onFoodRecognized }) => {
           weight: defaultWeight
         }));
         
-        const adjustedResults = foodsWithWeight.map(food => calculateNutritionByWeight(food));
-        
-        setRecognizedFoodsInternal(adjustedResults);
-        onFoodRecognized(adjustedResults);
+        setRecognizedFoodsInternal(foodsWithWeight);
+        onFoodRecognized(foodsWithWeight);
         
         toast({
           title: "Food Recognized",
-          description: `Detected ${results.length} food item(s)`,
+          description: `Detected ${results.foods.length} food item(s)`,
         });
       }
     } catch (error) {
@@ -166,7 +167,6 @@ const FoodRecognition = ({ onFoodRecognized }) => {
       });
       setRecognizedFoodsInternal([]);
       setOriginalFoods([]);
-      // Reset photo since there was an error
       resetPhotoAndInputs();
     } finally {
       setIsLoading(false);
@@ -177,11 +177,12 @@ const FoodRecognition = ({ onFoodRecognized }) => {
     if (recognizedFoodsInternal.length === 0) return;
     
     const updatedFoods = originalFoods.map(food => {
-      const updatedFood = {
+      const calculatedNutrition = calculateNutritionByWeight(food, defaultWeight);
+      return {
         ...food,
-        weight: defaultWeight
+        weight: defaultWeight,
+        ...calculatedNutrition
       };
-      return calculateNutritionByWeight(updatedFood);
     });
     
     setRecognizedFoodsInternal(updatedFoods);

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+// import Footer from '../components/Footer';
 import { toast } from "../hooks/use-toast";
 import './Login.css';
 
@@ -121,8 +121,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      
-      <Footer />
+            
     </div>
   );
 };

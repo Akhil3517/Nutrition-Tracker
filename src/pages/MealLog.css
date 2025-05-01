@@ -1,8 +1,8 @@
-
 .meal-log-page {
   display: flex;
   min-height: 100vh;
-  background-color: var(--gray-light);
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .dark .meal-log-page {
@@ -11,26 +11,31 @@
 
 .meal-log-content {
   flex: 1;
-  padding: 30px;
+  padding: 2rem;
   margin-left: 250px;
+  max-width: 1200px;
+  width: calc(100% - 250px);
 }
 
 .meal-log-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
 }
 
 .meal-log-actions {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
 .meal-log-header h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-color);
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .dark .meal-log-header h1 {
@@ -38,74 +43,132 @@
 }
 
 .meal-log-summary {
+  background-color: var(--card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+}
+
+.nutrition-totals h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--foreground);
+}
+
+.nutrition-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 1.5rem;
 }
 
-.summary-card {
-  background-color: white;
-  border-radius: 8px;
+.nutrition-card {
+  background-color: var(--secondary);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nutrition-card:hover {
+  transform: translateY(-2px);
   box-shadow: var(--shadow);
-  padding: 20px;
-  text-align: center;
 }
 
-.dark .summary-card {
-  background-color: hsl(var(--card));
-  color: hsl(var(--card-foreground));
+.nutrition-icon {
+  font-size: 1.5rem;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--accent);
+  color: var(--accent-foreground);
 }
 
-.summary-card h3 {
-  font-size: 1.1rem;
-  color: var(--text-color);
-  margin-bottom: 10px;
+.nutrition-info {
+  flex: 1;
 }
 
-.dark .summary-card h3 {
-  color: var(--text-light);
-}
-
-.summary-value {
-  font-size: 1.8rem;
+.nutrition-value {
+  display: block;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--accent-color);
+  color: var(--foreground);
+  margin-bottom: 0.25rem;
 }
 
-.dark .summary-value {
-  color: hsl(var(--primary));
+.nutrition-label {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
 }
 
-.meal-log-details {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  padding: 25px;
+.nutrition-progress {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
 }
 
-.dark .meal-log-details {
-  background-color: hsl(var(--card));
-  color: hsl(var(--card-foreground));
+.progress-bar {
+  height: 8px;
+  background-color: var(--muted);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-fill.calories {
+  background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+}
+
+.progress-fill.protein {
+  background: linear-gradient(90deg, #4dabf7, #74c0fc);
+}
+
+.progress-fill.carbs {
+  background: linear-gradient(90deg, #51cf66, #8ce99a);
+}
+
+.progress-fill.fat {
+  background: linear-gradient(90deg, #fcc419, #ffd43b);
+}
+
+.progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+.progress-goal {
+  font-weight: 500;
+  color: var(--foreground);
 }
 
 @media (max-width: 768px) {
   .meal-log-content {
-    margin-left: 60px;
-    padding: 15px;
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
   }
   
   .meal-log-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 15px;
+    gap: 1rem;
   }
   
-  .date-selector {
-    width: 100%;
-  }
-  
-  .date-selector input {
-    flex: 1;
+  .nutrition-cards {
+    grid-template-columns: 1fr;
   }
 }

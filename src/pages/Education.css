@@ -54,7 +54,7 @@
 
 .education-card {
   display: flex;
-  background-color: white;
+  background-color: hsl(var(--border));
   border-radius: 8px;
   box-shadow: var(--shadow);
   padding: 25px;
