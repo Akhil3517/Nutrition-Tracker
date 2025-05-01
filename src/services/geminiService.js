@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const GEMINI_API_KEY = "AIzaSyAYiJucyocACKAmyo2IxcHYUaWy9wK4r0E";
-const SPOONACULAR_API_KEY = "5950424121ce4fa4858fb4fdbebf6694";
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const SPOONACULAR_API_KEY = import.meta.env.VITE_SPOONACULAR_API_KEY;
 
 export const detectFood = async (imageData) => {
   try {
