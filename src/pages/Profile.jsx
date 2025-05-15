@@ -4,44 +4,94 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "../hooks/use-toast";
+import { useAuth } from '../contexts/AuthContext';
+import { updateUserProfile, fetchUserProfile } from '../services/api';
 import Sidebar from '../components/Sidebar';
 import './Profile.css';
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : {};
-  });
-
-  const [nutritionGoals, setNutritionGoals] = useState(() => {
-    const savedGoals = localStorage.getItem('nutritionGoals');
-    return savedGoals ? JSON.parse(savedGoals) : {
+  const { currentUser } = useAuth();
+  const [profileData, setProfileData] = useState({
+    name: '',
+    email: '',
+    nutritionGoals: {
       calories: 2000,
       protein: 150,
       carbs: 200,
       fat: 70
-    };
+    }
   });
 
   useEffect(() => {
-    // Save nutrition goals whenever they change
-    localStorage.setItem('nutritionGoals', JSON.stringify(nutritionGoals));
-  }, [nutritionGoals]);
+    const loadUserProfile = async () => {
+      try {
+        if (currentUser) {
+          // First set data from Firebase Auth
+          setProfileData(prev => ({
+            ...prev,
+            name: currentUser.displayName || '',
+            email: currentUser.email || ''
+          }));
+
+          // Then fetch additional data from our backend
+          const userData = await fetchUserProfile(currentUser.email);
+          if (userData) {
+            setProfileData(prev => ({
+              ...prev,
+              nutritionGoals: userData.nutritionGoals || prev.nutritionGoals
+            }));
+            // Update localStorage with nutrition goals
+            localStorage.setItem('nutritionGoals', JSON.stringify(userData.nutritionGoals));
+          }
+        }
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load profile data",
+          variant: "destructive",
+        });
+      }
+    };
+
+    loadUserProfile();
+  }, [currentUser]);
 
   const handleNutritionChange = (field, value) => {
-    setNutritionGoals(prev => ({
+    setProfileData(prev => ({
       ...prev,
-      [field]: Number(value)
+      nutritionGoals: {
+        ...prev.nutritionGoals,
+        [field]: Number(value)
+      }
     }));
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    toast({
-      title: "Goals Updated",
-      description: "Your nutrition goals have been saved successfully.",
-    });
+  const handleSave = async () => {
+    try {
+      // Update backend
+      await updateUserProfile(currentUser.email, {
+        name: profileData.name,
+        nutritionGoals: profileData.nutritionGoals
+      });
+
+      // Update localStorage
+      localStorage.setItem('nutritionGoals', JSON.stringify(profileData.nutritionGoals));
+
+      setIsEditing(false);
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully.",
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update profile",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -52,7 +102,7 @@ const Profile = () => {
           <h1>Your Profile</h1>
           <Button 
             variant={isEditing ? "default" : "outline"}
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={() => isEditing ? handleSave() : setIsEditing(true)}
           >
             {isEditing ? "Save Changes" : "Edit Profile"}
           </Button>
@@ -67,11 +117,11 @@ const Profile = () => {
               <div className="space-y-4">
                 <div className="user-info-item">
                   <Label>Name</Label>
-                  <div className="font-medium">{user.name || 'User'}</div>
+                  <div className="font-medium">{profileData.name || 'Not set'}</div>
                 </div>
                 <div className="user-info-item">
                   <Label>Email</Label>
-                  <div className="font-medium">{user.email || '23211a0505@bvrit.ac.in'}</div>
+                  <div className="font-medium">{profileData.email}</div>
                 </div>
               </div>
             </CardContent>
@@ -89,12 +139,12 @@ const Profile = () => {
                     <Input
                       id="calories"
                       type="number"
-                      value={nutritionGoals.calories}
+                      value={profileData.nutritionGoals.calories}
                       onChange={(e) => handleNutritionChange('calories', e.target.value)}
                       className="max-w-[150px]"
                     />
                   ) : (
-                    <div className="goal-value">{nutritionGoals.calories} kcal</div>
+                    <div className="goal-value">{profileData.nutritionGoals.calories} kcal</div>
                   )}
                 </div>
 
@@ -104,12 +154,12 @@ const Profile = () => {
                     <Input
                       id="protein"
                       type="number"
-                      value={nutritionGoals.protein}
+                      value={profileData.nutritionGoals.protein}
                       onChange={(e) => handleNutritionChange('protein', e.target.value)}
                       className="max-w-[150px]"
                     />
                   ) : (
-                    <div className="goal-value">{nutritionGoals.protein} g</div>
+                    <div className="goal-value">{profileData.nutritionGoals.protein} g</div>
                   )}
                 </div>
 
@@ -119,12 +169,12 @@ const Profile = () => {
                     <Input
                       id="carbs"
                       type="number"
-                      value={nutritionGoals.carbs}
+                      value={profileData.nutritionGoals.carbs}
                       onChange={(e) => handleNutritionChange('carbs', e.target.value)}
                       className="max-w-[150px]"
                     />
                   ) : (
-                    <div className="goal-value">{nutritionGoals.carbs} g</div>
+                    <div className="goal-value">{profileData.nutritionGoals.carbs} g</div>
                   )}
                 </div>
 
@@ -134,24 +184,15 @@ const Profile = () => {
                     <Input
                       id="fat"
                       type="number"
-                      value={nutritionGoals.fat}
+                      value={profileData.nutritionGoals.fat}
                       onChange={(e) => handleNutritionChange('fat', e.target.value)}
                       className="max-w-[150px]"
                     />
                   ) : (
-                    <div className="goal-value">{nutritionGoals.fat} g</div>
+                    <div className="goal-value">{profileData.nutritionGoals.fat} g</div>
                   )}
                 </div>
               </div>
-
-              {isEditing && (
-                <Button 
-                  className="mt-6" 
-                  onClick={handleSave}
-                >
-                  Save Changes
-                </Button>
-              )}
             </CardContent>
           </Card>
         </div>

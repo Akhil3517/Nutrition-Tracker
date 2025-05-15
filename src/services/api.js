@@ -76,9 +76,9 @@ export const getNutritionInfo = async (foodName) => {
 };
 
 // Function to fetch user profile
-export const fetchUserProfile = async (userId) => {
+export const fetchUserProfile = async (email) => {
   try {
-    const response = await api.get(`/users/${userId}/profile`);
+    const response = await axios.get(`${API_BASE_URL}/users/${email}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching user profile:', error);
@@ -87,9 +87,12 @@ export const fetchUserProfile = async (userId) => {
 };
 
 // Function to update user profile
-export const updateUserProfile = async (userId, profileData) => {
+export const updateUserProfile = async (email, profileData) => {
   try {
-    const response = await api.put(`/users/${userId}/profile`, profileData);
+    const response = await axios.post(`${API_BASE_URL}/users`, {
+      email,
+      ...profileData
+    });
     return response.data;
   } catch (error) {
     console.error('Error updating user profile:', error);
