@@ -1,24 +1,24 @@
 .food-suggestions {
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #ffffff;
+  padding: 1rem;
+  font-family: var(--font-sans);
 }
 
 .food-suggestions h2 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-bottom: 1.5rem;
-  color: #000000;
-  font-weight: 700;
+  color: hsl(var(--foreground));
+  font-weight: 600;
   text-align: center;
 }
 
 .suggestion-form {
-  background: #f8f9fa;
-  padding: 2rem;
+  background: hsl(var(--card));
+  padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
+  border: 1px solid hsl(var(--border));
   margin-bottom: 2rem;
 }
 
@@ -28,74 +28,63 @@
 
 .form-group label {
   display: block;
-  margin-bottom: 0.75rem;
-  font-weight: 800;
-  color: #000000;
-  font-size: 1.3rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  background-color: #302f2f;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  border-left: 4px solid #4a90e2;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
 }
 
 .form-control {
   width: 100%;
-  padding: 1rem;
-  border: 2px solid #e2e8f0;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  color: #000000;
-  background-color: #ffffff;
+  padding: 0.75rem;
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--background));
   transition: all 0.2s ease;
-  margin-top: 0.75rem;
-  font-weight: 600;
 }
 
 .form-control:focus {
   outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.1);
 }
 
 .form-control::placeholder {
-  color: #6c757d;
+  color: hsl(var(--muted-foreground));
 }
 
 .btn-primary {
-  background-color: #4a90e2;
-  color: #ffffff;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
   border: none;
-  padding: 0.875rem 1.5rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   width: 100%;
 }
 
 .btn-primary:hover {
-  background-color: #357abd;
-  transform: translateY(-1px);
+  background-color: hsl(var(--primary) / 0.9);
 }
 
 .btn-primary:disabled {
-  background-color: #cbd5e0;
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
   cursor: not-allowed;
-  transform: none;
 }
 
 .error-message {
-  color: #ffffff;
-  background-color: #dc3545;
-  padding: 1rem;
-  border-radius: 8px;
+  color: hsl(var(--destructive-foreground));
+  background-color: hsl(var(--destructive));
+  padding: 0.75rem;
+  border-radius: 6px;
   margin-bottom: 1.5rem;
-  border: 1px solid #dc3545;
+  font-size: 0.875rem;
   font-weight: 500;
 }
 
@@ -105,16 +94,17 @@
 }
 
 .suggestion-card {
-  background: #ffffff;
+  background: hsl(var(--card));
   border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
   padding: 1.5rem;
+  border: 1px solid hsl(var(--border));
   transition: all 0.2s ease;
 }
 
 .suggestion-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-lg);
 }
 
 .suggestion-image {
@@ -125,55 +115,55 @@
 
 .suggestion-info h3 {
   margin: 0 0 1rem 0;
-  color: #000000;
-  font-size: 1.5rem;
-  font-weight: 800;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  color: hsl(var(--foreground));
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 .description {
-  color: #000000;
+  color: hsl(var(--muted-foreground));
   margin-bottom: 1.5rem;
   line-height: 1.6;
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 0.875rem;
 }
 
 .ingredients {
-  background-color: #f8f9fa;
-  padding: 1.25rem;
+  background-color: hsl(var(--secondary));
+  padding: 1rem;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid hsl(var(--border));
 }
 
 .ingredients h4 {
   margin: 0 0 0.75rem 0;
-  color: #000000;
-  font-size: 1.2rem;
-  font-weight: 800;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
 .ingredients ul {
   margin: 0;
-  padding-left: 1.5rem;
-  color: #000000;
+  padding-left: 1.25rem;
+  color: hsl(var(--muted-foreground));
   line-height: 1.6;
-  font-weight: 500;
 }
 
 .ingredients li {
   margin-bottom: 0.5rem;
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 
 @media (max-width: 768px) {
   .food-suggestions {
-    padding: 1.25rem;
+    padding: 0.5rem;
   }
   
   .suggestion-form {
-    padding: 1.5rem;
+    padding: 1rem;
+  }
+
+  .suggestion-card {
+    padding: 1rem;
   }
 
   .food-suggestions h2 {

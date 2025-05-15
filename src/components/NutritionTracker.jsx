@@ -28,7 +28,10 @@ const NutritionTracker = ({ addedFoods }) => {
 
   // Calculate total nutrition values
   const calculateTotal = (field) => {
-    return addedFoods.reduce((total, food) => total + (food[field] || 0), 0);
+    return Number(addedFoods.reduce((total, food) => {
+      const value = Number(food[field] || 0).toFixed(2);
+      return Number(total) + Number(value);
+    }, 0).toFixed(2));
   };
 
   const totalCalories = calculateTotal('calories');
@@ -59,7 +62,7 @@ const NutritionTracker = ({ addedFoods }) => {
         <div className="nutrition-card">
           <div className="nutrition-icon calories-icon">🔥</div>
           <div className="nutrition-info">
-            <span className="nutrition-value">{totalCalories.toFixed(0)}</span>
+            <span className="nutrition-value">{totalCalories.toFixed(2)}</span>
             <span className="nutrition-label">Calories</span>
             <span className="nutrition-goal">Goal: {nutritionGoals.calories} kcal</span>
           </div>
@@ -68,7 +71,7 @@ const NutritionTracker = ({ addedFoods }) => {
         <div className="nutrition-card">
           <div className="nutrition-icon protein-icon">🥩</div>
           <div className="nutrition-info">
-            <span className="nutrition-value">{totalProtein.toFixed(1)}g</span>
+            <span className="nutrition-value">{totalProtein.toFixed(2)}g</span>
             <span className="nutrition-label">Protein</span>
             <span className="nutrition-goal">Goal: {nutritionGoals.protein}g</span>
           </div>
@@ -77,7 +80,7 @@ const NutritionTracker = ({ addedFoods }) => {
         <div className="nutrition-card">
           <div className="nutrition-icon carbs-icon">🍚</div>
           <div className="nutrition-info">
-            <span className="nutrition-value">{totalCarbs.toFixed(1)}g</span>
+            <span className="nutrition-value">{totalCarbs.toFixed(2)}g</span>
             <span className="nutrition-label">Carbs</span>
             <span className="nutrition-goal">Goal: {nutritionGoals.carbs}g</span>
           </div>
@@ -86,7 +89,7 @@ const NutritionTracker = ({ addedFoods }) => {
         <div className="nutrition-card">
           <div className="nutrition-icon fat-icon">🥑</div>
           <div className="nutrition-info">
-            <span className="nutrition-value">{totalFat.toFixed(1)}g</span>
+            <span className="nutrition-value">{totalFat.toFixed(2)}g</span>
             <span className="nutrition-label">Fat</span>
             <span className="nutrition-goal">Goal: {nutritionGoals.fat}g</span>
           </div>
@@ -97,7 +100,7 @@ const NutritionTracker = ({ addedFoods }) => {
         <div className="progress-item">
           <div className="progress-labels">
             <span>Calories</span>
-            <span className="progress-goal">{totalCalories.toFixed(0)} / {nutritionGoals.calories} kcal</span>
+            <span className="progress-goal">{totalCalories.toFixed(2)} / {nutritionGoals.calories} kcal</span>
           </div>
           <div className="progress-bar">
             <div 
@@ -113,7 +116,7 @@ const NutritionTracker = ({ addedFoods }) => {
         <div className="progress-item">
           <div className="progress-labels">
             <span>Protein</span>
-            <span className="progress-goal">{totalProtein.toFixed(1)} / {nutritionGoals.protein}g</span>
+            <span className="progress-goal">{totalProtein.toFixed(2)} / {nutritionGoals.protein}g</span>
           </div>
           <div className="progress-bar">
             <div 
@@ -129,7 +132,7 @@ const NutritionTracker = ({ addedFoods }) => {
         <div className="progress-item">
           <div className="progress-labels">
             <span>Carbs</span>
-            <span className="progress-goal">{totalCarbs.toFixed(1)} / {nutritionGoals.carbs}g</span>
+            <span className="progress-goal">{totalCarbs.toFixed(2)} / {nutritionGoals.carbs}g</span>
           </div>
           <div className="progress-bar">
             <div 
@@ -145,7 +148,7 @@ const NutritionTracker = ({ addedFoods }) => {
         <div className="progress-item">
           <div className="progress-labels">
             <span>Fat</span>
-            <span className="progress-goal">{totalFat.toFixed(1)} / {nutritionGoals.fat}g</span>
+            <span className="progress-goal">{totalFat.toFixed(2)} / {nutritionGoals.fat}g</span>
           </div>
           <div className="progress-bar">
             <div 

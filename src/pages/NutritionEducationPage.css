@@ -1,0 +1,146 @@
+.nutrition-education-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.nutrition-education-content {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  max-width: 1400px;
+  margin-right: auto;
+}
+
+.nutrition-education-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background-color: hsl(var(--card));
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid hsl(var(--border));
+}
+
+.header-content {
+  flex: 1;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: hsl(var(--foreground));
+  font-weight: 600;
+}
+
+.header-content p {
+  margin: 0.5rem 0 0;
+  color: hsl(var(--muted-foreground));
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.education-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.education-section {
+  background-color: hsl(var(--card));
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid hsl(var(--border));
+}
+
+.education-section h2 {
+  color: hsl(var(--foreground));
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.education-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.education-card {
+  background-color: hsl(var(--secondary));
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid hsl(var(--border));
+}
+
+.education-card h3 {
+  color: hsl(var(--foreground));
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.education-card p {
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.education-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.education-card li {
+  color: hsl(var(--muted-foreground));
+  padding: 0.5rem 0;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.education-card li:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .nutrition-education-content {
+    padding: 1rem;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .header-content h1 {
+    font-size: 1.75rem;
+  }
+
+  .education-section {
+    padding: 1rem;
+  }
+
+  .education-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .nutrition-education-content {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
+}
+
+@media (min-width: 1025px) {
+  .nutrition-education-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+  }
+} 

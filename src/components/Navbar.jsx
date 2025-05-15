@@ -1,10 +1,35 @@
-
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { toast } from "../hooks/use-toast";
 import './Navbar.css';
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
+  
+  const handleAuthClick = () => {
+    if (currentUser) {
+      logout();
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
+  };
+
+  const handleProtectedRouteClick = (path) => {
+    if (!currentUser) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to access this feature.",
+        variant: "destructive",
+      });
+      navigate('/login', { state: { from: { pathname: path } } });
+    } else {
+      navigate(path);
+    }
+  };
   
   return (
     <nav className="navbar">
@@ -16,28 +41,32 @@ const Navbar = () => {
           <Link to="/">Home</Link>
         </li>
         <li className={location.pathname === '/tracker' ? 'active' : ''}>
-          <Link to="/tracker">Tracker</Link>
+          <button 
+            onClick={() => handleProtectedRouteClick('/tracker')}
+            className="nav-link-button"
+          >
+            Tracker
+          </button>
         </li>
         {/* <li className={location.pathname === '/suggestions' ? 'active' : ''}>
           <Link to="/suggestions">Food Suggestions</Link>
         </li> */}
-        <li className={location.pathname === '/education' ? 'active' : ''}>
-          <Link to="/education">Nutrition Education</Link>
-        </li>
         <li className={location.pathname === '/profile' ? 'active' : ''}>
-          <Link to="/profile">Profile</Link>
+          <button 
+            onClick={() => handleProtectedRouteClick('/profile')}
+            className="nav-link-button"
+          >
+            Profile
+          </button>
         </li>
       </ul>
       <div className="navbar-auth">
-        {localStorage.getItem('user') ? (
-          <Link to="/login" className="btn btn-danger" onClick={() => localStorage.removeItem('user')}>
-            Logout
-          </Link>
-        ) : (
-          <Link to="/login" className="btn btn-primary">
-            Login
-          </Link>
-        )}
+        <button 
+          onClick={handleAuthClick}
+          className={`btn ${currentUser ? 'btn-danger' : 'btn-primary'}`}
+        >
+          {currentUser ? 'Logout' : 'Login'}
+        </button>
       </div>
     </nav>
   );

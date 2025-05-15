@@ -2,81 +2,65 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--primary-color);
-  color: var(--text-light);
-  padding: 0.75rem 2rem;
-  box-shadow: var(--shadow-md);
-  transition: all 0.3s ease;
+  padding: 1rem 2rem;
+  background-color: var(--background);
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 50;
   backdrop-filter: blur(8px);
-  background-color: rgba(var(--primary-color), 0.8);
 }
 
 .navbar-brand h2 {
-  font-size: 1.75rem;
-  font-weight: 800;
   margin: 0;
-  color: #ffffff;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  letter-spacing: 1px;
+  color: var(--foreground);
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .navbar-nav {
   display: flex;
   list-style: none;
-  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  gap: 2rem;
+  align-items: center;
 }
 
 .navbar-nav li {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.navbar-nav li a {
-  color: var(--text-light);
-  font-weight: 600;
-  padding: 0.5rem 0;
-  transition: all 0.3s ease;
-  position: relative;
-  opacity: 0.9;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+.navbar-nav li a,
+.navbar-nav li button.nav-link-button {
+  color: var(--foreground);
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
 }
 
-.navbar-nav li a:hover {
-  opacity: 1;
-  color: var(--accent-color);
+.navbar-nav li.active a,
+.navbar-nav li.active button.nav-link-button {
+  color: var(--primary);
+  background-color: hsl(var(--primary) / 0.1);
 }
 
-.navbar-nav li a::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background: linear-gradient(90deg, var(--accent-color), transparent);
-  transition: width 0.3s ease;
-}
-
-.navbar-nav li a:hover::after {
-  width: 100%;
-}
-
-.navbar-nav li.active a {
-  color: var(--accent-color);
-  opacity: 0.5;
-}
-
-.navbar-nav li.active::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent-color), transparent);
-  border-radius: 2px;
+.navbar-nav li a:hover,
+.navbar-nav li button.nav-link-button:hover {
+  color: var(--primary);
+  background-color: hsl(var(--primary) / 0.1);
 }
 
 .navbar-auth {
@@ -85,53 +69,101 @@
   gap: 1rem;
 }
 
-.navbar-auth .btn {
+.btn {
   padding: 0.5rem 1.25rem;
-  border-radius: var(--radius);
+  border-radius: 0.5rem;
+  font-size: 1rem;
   font-weight: 500;
-  transition: all 0.2s ease;
-  border: none;
   cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 6rem;
 }
 
-.navbar-auth .btn-primary {
-  background-color: var(--accent-color);
-  color: var(--text-light);
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
 }
 
-.navbar-auth .btn-danger {
-  background-color: var(--danger-color);
-  color: var(--text-light);
+.btn-primary:hover {
+  background-color: hsl(var(--primary) / 0.9);
+  transform: translateY(-1px);
 }
 
-.navbar-auth .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  opacity: 0.9;
+.btn-danger {
+  background-color: hsl(var(--destructive));
+  color: var(--destructive-foreground);
+}
+
+.btn-danger:hover {
+  background-color: hsl(var(--destructive) / 0.9);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 1rem 1.5rem;
+  }
+
+  .navbar-nav {
+    gap: 1.5rem;
+  }
 }
 
 @media (max-width: 768px) {
   .navbar {
+    padding: 1rem;
     flex-direction: column;
-    padding: 0.5rem;
-    gap: 0.5rem;
-  }
-
-  .navbar-brand {
-    margin-bottom: 0.25rem;
-  }
-
-  .navbar-brand h2 {
-    font-size: 1.5rem;
+    gap: 1rem;
   }
 
   .navbar-nav {
+    gap: 1rem;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 0.75rem;
   }
 
-  .navbar-auth {
-    margin-top: 0.25rem;
+  .navbar-nav li a,
+  .navbar-nav li button.nav-link-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    min-width: 5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.75rem;
+  }
+
+  .navbar-brand h2 {
+    font-size: 1.25rem;
+  }
+
+  .navbar-nav {
+    gap: 0.5rem;
+  }
+
+  .navbar-nav li a,
+  .navbar-nav li button.nav-link-button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+    height: 2rem;
+  }
+
+  .btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    min-width: 4rem;
+    height: 2rem;
   }
 }

@@ -153,4 +153,97 @@ export const getFoodSuggestions = async (course, diet) => {
     console.error('Error getting food suggestions:', error);
     return [];
   }
+};
+
+// Function to generate meal plan using Gemini API
+export const generateMealPlan = async (nutritionSummary, nutritionGoals, deficiencies) => {
+  try {
+    const prompt = `Generate a 7-day Indian meal plan that addresses any deficiencies and meets the nutrition goals. Focus on traditional Indian dishes and regional cuisines.
+
+Nutrition Summary (Monthly Average):
+- Calories: ${nutritionSummary.calories} kcal
+- Protein: ${nutritionSummary.protein}g
+- Carbs: ${nutritionSummary.carbs}g
+- Fat: ${nutritionSummary.fat}g
+
+Nutrition Goals:
+- Calories: ${nutritionGoals.calories} kcal
+- Protein: ${nutritionGoals.protein}g
+- Carbs: ${nutritionGoals.carbs}g
+- Fat: ${nutritionGoals.fat}g
+
+Deficiencies to Address:
+${deficiencies.map(d => `- ${d.nutrient}: Consider adding more ${d.foodSuggestions.join(', ')}`).join('\n')}
+
+Generate a detailed Indian meal plan for each day of the week. For each meal (breakfast, lunch, dinner, and snacks), provide:
+1. Traditional Indian meal name
+2. Brief description including region of origin
+3. Key ingredients (focus on Indian spices and ingredients)
+4. Estimated nutritional values (calories, protein, carbs, fat)
+
+Include a variety of:
+- Regional cuisines (North Indian, South Indian, East Indian, West Indian)
+- Vegetarian and non-vegetarian options
+- Traditional breakfast items (like idli, dosa, paratha, poha)
+- Main course dishes (like dal, sabzi, curry)
+- Indian breads (like roti, naan, paratha)
+- Rice dishes (like biryani, pulao)
+- Indian snacks (like samosa, pakora, chaat)
+- Indian desserts (like kheer, halwa)
+
+Return ONLY a valid JSON array with objects containing:
+{
+  "day": "Day name",
+  "meals": [
+    {
+      "type": "meal type",
+      "name": "Indian meal name",
+      "description": "brief description with region",
+      "ingredients": ["ingredient1", "ingredient2"],
+      "nutrition": {
+        "calories": number,
+        "protein": number,
+        "carbs": number,
+        "fat": number
+      }
+    }
+  ]
+}
+
+Do not include any markdown formatting or additional text. Return only the JSON array.`;
+
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        contents: [{
+          parts: [{
+            text: prompt
+          }]
+        }]
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    if (response.data && response.data.candidates && response.data.candidates[0].content.parts[0].text) {
+      const mealPlanText = response.data.candidates[0].content.parts[0].text;
+      // Remove any markdown formatting
+      const cleanJson = mealPlanText.replace(/```json\n?|\n?```/g, '').trim();
+      try {
+        const mealPlan = JSON.parse(cleanJson);
+        return mealPlan;
+      } catch (error) {
+        console.error('Error parsing meal plan JSON:', error);
+        console.error('Raw response:', mealPlanText);
+        return [];
+      }
+    }
+    return [];
+  } catch (error) {
+    console.error('Error generating meal plan:', error);
+    return [];
+  }
 }; 

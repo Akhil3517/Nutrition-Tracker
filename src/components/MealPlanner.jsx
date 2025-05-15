@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { addMeal, deleteMeal } from '../services/mealService';
-import { toast } from 'sonner';
+import { toast } from "../hooks/use-toast";
 import './MealPlanner.css';
 
 const MealPlanner = ({ date, deficiencies, savedMeals }) => {
@@ -26,7 +25,8 @@ const MealPlanner = ({ date, deficiencies, savedMeals }) => {
     try {
       const mealWithDate = {
         ...newMeal,
-        date: dateString
+        date: dateString,
+        timestamp: new Date().toISOString()
       };
       
       await addMeal(mealWithDate);
@@ -38,22 +38,36 @@ const MealPlanner = ({ date, deficiencies, savedMeals }) => {
         fat: 0
       });
       setIsAdding(false);
-      toast.success('Meal added successfully');
+      toast({
+        title: "Success",
+        description: "Meal added successfully",
+      });
       window.location.reload();
     } catch (error) {
       console.error('Failed to add meal:', error);
-      toast.error('Failed to add meal');
+      toast({
+        title: "Error",
+        description: "Failed to add meal",
+        variant: "destructive",
+      });
     }
   };
 
   const handleDeleteMeal = async (mealId) => {
     try {
       await deleteMeal(mealId);
-      toast.success('Meal deleted successfully');
+      toast({
+        title: "Success",
+        description: "Meal deleted successfully",
+      });
       window.location.reload();
     } catch (error) {
       console.error('Failed to delete meal:', error);
-      toast.error('Failed to delete meal');
+      toast({
+        title: "Error",
+        description: "Failed to delete meal",
+        variant: "destructive",
+      });
     }
   };
 
@@ -66,8 +80,8 @@ const MealPlanner = ({ date, deficiencies, savedMeals }) => {
     <div className="meal-planner">
       {dayMeals.length > 0 ? (
         <div className="day-meals">
-          {dayMeals.map((meal, index) => (
-            <div key={index} className="meal-item">
+          {dayMeals.map((meal) => (
+            <div key={meal.id} className="meal-item">
               <div className="meal-info">
                 <h4 className="meal-name">{meal.name}</h4>
                 <div className="meal-timestamp">

@@ -1,180 +1,307 @@
-
 .education-page {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  background-color: var(--background);
+  color: var(--text);
+  padding: 2rem;
+  padding-top: calc(2rem + 64px); /* Space for navbar */
+  position: relative;
 }
 
 .education-container {
-  flex: 1;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 50px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure navbar stays on top */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: var(--background);
+  border-bottom: 1px solid var(--border);
 }
 
 .education-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 3rem;
 }
 
 .education-header h1 {
   font-size: 2.5rem;
-  color: var(--text-color);
-  margin-bottom: 15px;
+  color: var(--text);
+  margin-bottom: 1rem;
+  font-weight: 700;
 }
 
 .education-header p {
   font-size: 1.2rem;
-  color: #666;
+  color: var(--text-muted);
   max-width: 700px;
   margin: 0 auto;
+  line-height: 1.6;
 }
 
-.education-section {
-  margin-bottom: 60px;
-}
-
-.education-section h2 {
-  font-size: 1.8rem;
-  color: var(--primary-color);
-  margin-bottom: 25px;
-  position: relative;
-  padding-bottom: 10px;
-}
-
-.education-section h2::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 60px;
-  height: 3px;
-  background-color: var(--accent-color);
+.education-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
 }
 
 .education-card {
-  display: flex;
-  background-color: hsl(var(--border));
-  border-radius: 8px;
+  background-color: var(--card);
+  border-radius: 12px;
+  padding: 1.5rem;
   box-shadow: var(--shadow);
-  padding: 25px;
-  margin-bottom: 25px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--border);
+}
+
+.education-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .education-icon {
-  font-size: 2.5rem;
-  margin-right: 20px;
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: var(--primary);
+  color: white;
+  border-radius: 12px;
+  margin-bottom: 1rem;
 }
 
-.education-info {
-  flex: 1;
+.education-content h2 {
+  font-size: 1.5rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+  font-weight: 600;
 }
 
-.education-info h3 {
-  font-size: 1.4rem;
-  margin-bottom: 10px;
-  color: var(--text-color);
-}
-
-.education-info p {
-  color: #555;
+.education-content p {
+  color: var(--text-muted);
   line-height: 1.6;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
 }
 
-.education-info p:last-child {
-  margin-bottom: 0;
+.nutrient-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
 }
 
-.nutrition-label-guide {
-  background-color: white;
+.nutrient-item {
+  background-color: var(--background);
+  padding: 1rem;
   border-radius: 8px;
-  box-shadow: var(--shadow);
-  padding: 25px;
+  border: 1px solid var(--border);
+}
+
+.nutrient-item h3 {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.nutrient-item p {
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.nutrient-item ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nutrient-item ul li {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 0.25rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.nutrient-item ul li::before {
+  content: "•";
+  color: var(--primary);
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.meal-planning-section {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.plate-method {
+  background-color: var(--background);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.plate-visual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.plate-section {
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.plate-section.vegetables {
+  background-color: #4ade80;
+  color: white;
+  grid-column: span 2;
+}
+
+.plate-section.grains {
+  background-color: #fbbf24;
+  color: white;
+}
+
+.plate-section.protein {
+  background-color: #60a5fa;
+  color: white;
+}
+
+.meal-tips {
+  background-color: var(--background);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.meal-tips ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.meal-tips ul li {
+  color: var(--text-muted);
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.meal-tips ul li::before {
+  content: "✓";
+  color: var(--primary);
+  margin-right: 0.5rem;
+}
+
+.label-guide {
+  display: grid;
+  gap: 1rem;
 }
 
 .guide-point {
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.guide-point:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
+  background-color: var(--background);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }
 
 .guide-point h3 {
-  font-size: 1.2rem;
-  margin-bottom: 8px;
-  color: var(--text-color);
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
 .guide-point p {
-  color: #555;
-  line-height: 1.5;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0;
 }
 
-.hydration-info {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  padding: 25px;
-}
-
-.hydration-info > p {
-  margin-bottom: 25px;
-  font-size: 1.1rem;
-  color: #555;
-  line-height: 1.6;
-}
-
-.hydration-tips {
+.hydration-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  gap: 1.5rem;
 }
 
-.tip {
-  padding: 20px;
-  background-color: var(--gray-light);
+.hydration-intro {
+  background-color: var(--background);
+  padding: 1rem;
   border-radius: 8px;
+  border: 1px solid var(--border);
+  margin: 0;
 }
 
-.tip h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: var(--text-color);
+.hydration-benefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
-.tip p {
-  color: #555;
-  line-height: 1.5;
+.benefit-item {
+  background-color: var(--background);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }
 
-.tip ul {
-  margin-top: 10px;
-  padding-left: 20px;
+.benefit-item h3 {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+  font-weight: 600;
 }
 
-.tip ul li {
-  margin-bottom: 8px;
-  color: #555;
+.benefit-item ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefit-item ul li {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 0.25rem 0;
+  display: flex;
+  align-items: center;
+}
+
+.benefit-item ul li::before {
+  content: "•";
+  color: var(--primary);
+  font-weight: bold;
+  margin-right: 0.5rem;
 }
 
 @media (max-width: 768px) {
-  .education-card {
-    flex-direction: column;
+  .education-page {
+    padding: 1rem;
   }
-  
-  .education-icon {
-    margin-right: 0;
-    margin-bottom: 15px;
+
+  .education-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .hydration-tips {
+
+  .plate-visual {
+    grid-template-columns: 1fr;
+  }
+
+  .plate-section.vegetables {
+    grid-column: span 1;
+  }
+
+  .hydration-benefits {
     grid-template-columns: 1fr;
   }
 }

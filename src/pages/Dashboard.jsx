@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { useAuth } from '../contexts/AuthContext';
+import { getNutritionData, saveNutritionData } from '../services/nutritionService';
+import { toast } from "../hooks/use-toast";
 
 import Sidebar from '../components/Sidebar';
 import ThemeToggle from '../components/ThemeToggle';
@@ -13,177 +10,296 @@ import FoodRecognition from '../components/FoodRecognition';
 import NutritionTracker from '../components/NutritionTracker';
 import MealList from '../components/MealList';
 import ProfileMenu from '../components/ProfileMenu';
-import { toast } from "../hooks/use-toast";
 import './Dashboard.css';
 
 const Dashboard = () => {
   const [foods, setFoods] = useState([]);
+  const [pendingFoods, setPendingFoods] = useState([]);
   const [recognizedFoods, setRecognizedFoods] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+
+  const [nutritionGoals, setNutritionGoals] = useState(() => {
+    const savedGoals = localStorage.getItem('nutritionGoals');
+    return savedGoals ? JSON.parse(savedGoals) : {
+      calories: 2000,
+      protein: 150,
+      carbs: 200,
+      fat: 70
+    };
+  });
 
   useEffect(() => {
-    // Check if user is logged in
-    const user = localStorage.getItem('user');
-    if (!user) {
-      navigate('/login');
-    }
-    
-    // Load saved meals from localStorage
-    const savedMeals = localStorage.getItem('savedMeals');
-    if (savedMeals) {
-      try {
-        setFoods(JSON.parse(savedMeals));
-      } catch (error) {
-        console.error('Error loading saved meals:', error);
-        setFoods([]);
+    const loadUserData = async () => {
+      if (!currentUser) {
+        navigate('/login', { state: { from: { pathname: '/dashboard' } } });
+        return;
       }
-    }
-  }, [navigate]);
 
-  const handleFoodRecognized = (detectedFoods) => {
-    // Update the recognizedFoods state with the detected foods
-    setRecognizedFoods(detectedFoods);
+      try {
+        setLoading(true);
+        const nutritionData = await getNutritionData(currentUser.uid);
+        
+        if (nutritionData && nutritionData.foods) {
+          setFoods(nutritionData.foods);
+        }
+      } catch (error) {
+        console.error('Error loading nutrition data:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load nutrition data. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserData();
+  }, [currentUser, navigate]);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const savedGoals = localStorage.getItem('nutritionGoals');
+      if (savedGoals) {
+        setNutritionGoals(JSON.parse(savedGoals));
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  const nutritionTotals = foods.reduce((totals, food) => {
+    const foodCalories = parseFloat(food.calories) || 0;
+    const foodProtein = parseFloat(food.protein) || 0;
+    const foodCarbs = parseFloat(food.carbs) || 0;
+    const foodFat = parseFloat(food.fat) || 0;
+
+    return {
+      calories: Number((totals.calories + foodCalories).toFixed(2)),
+      protein: Number((totals.protein + foodProtein).toFixed(2)),
+      carbs: Number((totals.carbs + foodCarbs).toFixed(2)),
+      fat: Number((totals.fat + foodFat).toFixed(2))
+    };
+  }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
+
+  const progressPercentages = {
+    calories: Math.min((nutritionTotals.calories / nutritionGoals.calories) * 100, 100),
+    protein: Math.min((nutritionTotals.protein / nutritionGoals.protein) * 100, 100),
+    carbs: Math.min((nutritionTotals.carbs / nutritionGoals.carbs) * 100, 100),
+    fat: Math.min((nutritionTotals.fat / nutritionGoals.fat) * 100, 100)
   };
 
-  const addFoodToLog = () => {
-    if (recognizedFoods.length > 0) {
-      // Add all recognized foods with the current selected date and current time
-      const now = new Date();
-      const currentTime = new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate(),
-        now.getHours(),
-        now.getMinutes(),
-        now.getSeconds()
-      );
-      
-      const foodsWithDate = recognizedFoods.map(food => ({
+  const handleFoodRecognized = (detectedFoods) => {
+    if (!currentUser) {
+      navigate('/login', { state: { from: { pathname: '/dashboard' } } });
+      return;
+    }
+    setPendingFoods(detectedFoods);
+  };
+
+  const handleUpdateMealLog = async () => {
+    if (!currentUser) {
+      navigate('/login', { state: { from: { pathname: '/dashboard' } } });
+      return;
+    }
+    try {
+      const foodsWithDate = pendingFoods.map(food => ({
         ...food,
-        date: currentTime.toISOString()
+        date: new Date().toISOString(),
+        addedAt: new Date().toISOString()
       }));
       
-      const updatedFoods = [...foods, ...foodsWithDate];
-      setFoods(updatedFoods);
-      setRecognizedFoods([]);
+      const newFoods = [...foods, ...foodsWithDate];
+      setFoods(newFoods);
+      setPendingFoods([]);
       
-      // Save to localStorage
-      localStorage.setItem('savedMeals', JSON.stringify(updatedFoods));
-      
+      // Save to Firebase
+      await saveNutritionData(currentUser.uid, {
+        foods: newFoods,
+        lastUpdated: new Date().toISOString()
+      });
+
+      // Show success message
       toast({
-        title: "Food Added",
-        description: `${recognizedFoods.length} food item(s) added to your meal log.`,
+        title: "Success",
+        description: "Food items added to meal log successfully",
+      });
+
+      // Force reload of MealLog page if it's open
+      const mealLogEvent = new CustomEvent('mealLogUpdate', {
+        detail: { foods: newFoods }
+      });
+      window.dispatchEvent(mealLogEvent);
+    } catch (error) {
+      console.error('Error saving food data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save food data. Please try again.",
+        variant: "destructive",
       });
     }
   };
 
-  const removeFoodFromLog = (index) => {
-    const foodsForDate = foods.filter(food => 
-      food.date && new Date(food.date).toDateString() === selectedDate.toDateString()
-    );
-    
-    const foodToRemove = foodsForDate[index];
-    const updatedFoods = foods.filter(food => food !== foodToRemove);
-    
-    setFoods(updatedFoods);
-    localStorage.setItem('savedMeals', JSON.stringify(updatedFoods));
-    
-    toast({
-      title: "Food Removed",
-      description: "Item removed from your meal log.",
-    });
+  const handleRemoveFood = async (index) => {
+    if (!currentUser) {
+      navigate('/login', { state: { from: { pathname: '/dashboard' } } });
+      return;
+    }
+
+    try {
+      const newFoods = foods.filter((_, i) => i !== index);
+      setFoods(newFoods);
+      
+      await saveNutritionData(currentUser.uid, {
+        foods: newFoods,
+        lastUpdated: new Date().toISOString()
+      });
+
+      toast({
+        title: "Success",
+        description: "Food item removed successfully",
+      });
+    } catch (error) {
+      console.error('Error removing food:', error);
+      toast({
+        title: "Error",
+        description: "Failed to remove food item. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
-  // Filter foods based on selected date
-  const foodsForSelectedDate = foods.filter(food => {
-    if (!food.date) return false; // Only show foods with dates
-    return new Date(food.date).toDateString() === selectedDate.toDateString();
-  });
+  if (loading) {
+    return (
+      <div className="dashboard">
+        <Sidebar />
+        <div className="dashboard-content">
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading your nutrition data...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="dashboard-page">
+    <div className="dashboard">
       <Sidebar />
-      
       <div className="dashboard-content">
         <div className="dashboard-header">
-          <h1>Your Dashboard</h1>
-          <div className="dashboard-actions">
+          <h1>Dashboard</h1>
+          <div className="header-actions">
             <ThemeToggle />
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-[200px] justify-start text-left font-normal ml-4",
-                    "border border-input bg-background hover:bg-accent hover:text-accent-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={selectedDate}
-                  onSelect={(date) => date && setSelectedDate(date)}
-                  initialFocus
-                  className={cn("p-3 pointer-events-auto")}
-                />
-              </PopoverContent>
-            </Popover>
             <div className="ml-4">
               <ProfileMenu />
             </div>
           </div>
         </div>
-        
-        <div className="food-recognition-section">
-          <h2 className="section-title">Food Recognition</h2>
-          <FoodRecognition onFoodRecognized={handleFoodRecognized} />
-          
-          {recognizedFoods.length > 0 && (
-            <div className="recognized-foods-container">
-              <h3>Recognized Foods</h3>
-              <div className="recognized-foods-list">
-                {recognizedFoods.map((food, index) => (
-                  <div key={index} className="recognized-food-card">
-                    <div className="recognized-food-info">
-                      <h4>{food.name}</h4>
-                      <div className="nutrition-facts">
-                        <span className="nutrition-fact">
-                          <span className="label">Calories:</span>
-                          {food.calories}
-                        </span>
-                        <span className="nutrition-fact">
-                          <span className="label">Protein:</span>
-                          {food.protein}g
-                        </span>
-                        <span className="nutrition-fact">
-                          <span className="label">Carbs:</span>
-                          {food.carbs}g
-                        </span>
-                        <span className="nutrition-fact">
-                          <span className="label">Fat:</span>
-                          {food.fat}g
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+
+        <div className="dashboard-main">
+          <div className="food-recognition-section">
+            <FoodRecognition onFoodRecognized={handleFoodRecognized} />
+            {pendingFoods.length > 0 && (
+              <div className="pending-foods-section">
+                <h3>Foods ready to add to meal log:</h3>
+                <ul>
+                  {pendingFoods.map((food, idx) => (
+                    <li key={idx}>{food.name} ({food.weight || 100}g)</li>
+                  ))}
+                </ul>
+                <button className="btn btn-primary mt-2" onClick={handleUpdateMealLog}>
+                  Update to Meal Log
+                </button>
               </div>
-              <button className="btn btn-primary mt-4" onClick={addFoodToLog}>
-                Add All to Meal Log
-              </button>
+            )}
+          </div>
+
+          <div className="nutrition-tracker-section">
+            <div className="nutrition-summary">
+              <h3>Daily Nutrition Summary</h3>
+              <div className="nutrition-cards">
+                <div className="nutrition-card">
+                  <div className="nutrition-icon calories-icon">🔥</div>
+                  <div className="nutrition-info">
+                    <span className="nutrition-value">{nutritionTotals.calories.toFixed(0)}</span>
+                    <span className="nutrition-label">Calories</span>
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill calories" 
+                        style={{ 
+                          width: `${progressPercentages.calories}%`,
+                          backgroundColor: progressPercentages.calories > 100 ? 'var(--destructive)' : 'var(--primary)'
+                        }}
+                      />
+                    </div>
+                    <span className="progress-text">{progressPercentages.calories.toFixed(0)}% of {nutritionGoals.calories}</span>
+                  </div>
+                </div>
+                
+                <div className="nutrition-card">
+                  <div className="nutrition-icon protein-icon">🥩</div>
+                  <div className="nutrition-info">
+                    <span className="nutrition-value">{nutritionTotals.protein.toFixed(1)}g</span>
+                    <span className="nutrition-label">Protein</span>
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill protein" 
+                        style={{ 
+                          width: `${progressPercentages.protein}%`,
+                          backgroundColor: progressPercentages.protein > 100 ? 'var(--destructive)' : 'var(--primary)'
+                        }}
+                      />
+                    </div>
+                    <span className="progress-text">{progressPercentages.protein.toFixed(0)}% of {nutritionGoals.protein}g</span>
+                  </div>
+                </div>
+                
+                <div className="nutrition-card">
+                  <div className="nutrition-icon carbs-icon">🍚</div>
+                  <div className="nutrition-info">
+                    <span className="nutrition-value">{nutritionTotals.carbs.toFixed(1)}g</span>
+                    <span className="nutrition-label">Carbs</span>
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill carbs" 
+                        style={{ 
+                          width: `${progressPercentages.carbs}%`,
+                          backgroundColor: progressPercentages.carbs > 100 ? 'var(--destructive)' : 'var(--primary)'
+                        }}
+                      />
+                    </div>
+                    <span className="progress-text">{progressPercentages.carbs.toFixed(0)}% of {nutritionGoals.carbs}g</span>
+                  </div>
+                </div>
+                
+                <div className="nutrition-card">
+                  <div className="nutrition-icon fat-icon">🥑</div>
+                  <div className="nutrition-info">
+                    <span className="nutrition-value">{nutritionTotals.fat.toFixed(1)}g</span>
+                    <span className="nutrition-label">Fat</span>
+                    <div className="progress-bar">
+                      <div 
+                        className="progress-fill fat" 
+                        style={{ 
+                          width: `${progressPercentages.fat}%`,
+                          backgroundColor: progressPercentages.fat > 100 ? 'var(--destructive)' : 'var(--primary)'
+                        }}
+                      />
+                    </div>
+                    <span className="progress-text">{progressPercentages.fat.toFixed(0)}% of {nutritionGoals.fat}g</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          )}
-        </div>
-        
-        <NutritionTracker addedFoods={foodsForSelectedDate} />
-        
-        <div className="meal-list-container card">
-          <MealList foods={foodsForSelectedDate} onRemoveFood={removeFoodFromLog} />
+          </div>
+
+          <div className="meal-list-section">
+            <MealList foods={foods} onRemoveFood={handleRemoveFood} />
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
 // import Footer from '../components/Footer';
 import { toast } from "../hooks/use-toast";
@@ -12,60 +12,74 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { login, signup, currentUser } = useAuth();
   const state = location.state || {};
   const from = state?.from?.pathname || '/dashboard';
 
   useEffect(() => {
-    // Check if user is already logged in
-    const user = localStorage.getItem('user');
-    if (user) {
-      navigate('/dashboard');
+    // If user is already logged in, redirect to the intended destination
+    if (currentUser) {
+      navigate(from);
     }
-  }, [navigate]);
+  }, [currentUser, navigate, from]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
-    // Basic validation
-    if (!email || !password || (!isLogin && !name)) {
-      setError('Please fill in all fields');
-      return;
-    }
-
-    // This is a mock authentication. In a real app, you would connect to a backend.
-    if (isLogin) {
-      // Mock login successful
-      localStorage.setItem('user', JSON.stringify({ email, name: 'User' }));
-      toast({
-        title: "Login successful",
-        description: "Welcome back!",
-      });
+    try {
+      if (isLogin) {
+        await login(email, password);
+        toast({
+          title: "Login successful",
+          description: "Welcome back!",
+        });
+      } else {
+        await signup(email, password, name);
+        toast({
+          title: "Registration successful",
+          description: "Your account has been created.",
+        });
+      }
       navigate(from);
-    } else {
-      // Mock registration successful
-      localStorage.setItem('user', JSON.stringify({ email, name }));
+    } catch (error) {
+      setError(error.message);
       toast({
-        title: "Registration successful",
-        description: "Your account has been created.",
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
       });
-      navigate(from);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-page">
       <Navbar />
-      
-      <div className="auth-container">
-        <div className="auth-card">
-          <h2>{isLogin ? 'Login' : 'Create an Account'}</h2>
-          
-          {error && <div className="auth-error">{error}</div>}
-          
-          <form onSubmit={handleSubmit} className="auth-form">
+      <div className="login-container">
+        <div className="login-card">
+          <div className="login-header">
+            <h1>{isLogin ? 'Welcome Back' : 'Create Account'}</h1>
+            <p className="login-subtitle">
+              {isLogin 
+                ? 'Sign in to continue tracking your nutrition journey'
+                : 'Join us to start your nutrition tracking journey'}
+            </p>
+          </div>
+
+          {error && (
+            <div className="error-message">
+              <span className="error-icon">⚠️</span>
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="login-form">
             {!isLogin && (
               <div className="form-group">
                 <label htmlFor="name">Full Name</label>
@@ -74,11 +88,13 @@ const Login = () => {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter your name"
+                  placeholder="Enter your full name"
+                  required
+                  className="form-input"
                 />
               </div>
             )}
-            
+
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
               <input
@@ -87,9 +103,11 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
+                required
+                className="form-input"
               />
             </div>
-            
+
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input
@@ -98,30 +116,37 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
+                required
+                className="form-input"
               />
             </div>
-            
-            <button type="submit" className="btn btn-primary btn-block">
-              {isLogin ? 'Login' : 'Create Account'}
+
+            <button 
+              type="submit" 
+              className="submit-button"
+              disabled={loading}
+            >
+              {loading ? (
+                <span className="loading-spinner"></span>
+              ) : (
+                isLogin ? 'Sign In' : 'Create Account'
+              )}
             </button>
           </form>
-          
-          <div className="auth-switch">
-            {isLogin ? (
-              <p>
-                Don't have an account?{' '}
-                <button onClick={() => setIsLogin(false)}>Register</button>
-              </p>
-            ) : (
-              <p>
-                Already have an account?{' '}
-                <button onClick={() => setIsLogin(true)}>Login</button>
-              </p>
-            )}
+
+          <div className="form-footer">
+            <p>
+              {isLogin ? "Don't have an account? " : "Already have an account? "}
+              <button
+                className="switch-mode-button"
+                onClick={() => setIsLogin(!isLogin)}
+              >
+                {isLogin ? 'Sign Up' : 'Sign In'}
+              </button>
+            </p>
           </div>
         </div>
       </div>
-            
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 .food-recognition {
   margin-bottom: 30px;
 }
@@ -257,4 +256,37 @@
 
 .mt-4 {
   margin-top: 1rem;
+}
+
+.food-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: var(--destructive);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: background-color 0.2s ease;
+}
+
+.dark .btn-remove {
+  color: hsl(var(--destructive));
+}
+
+.btn-remove:hover {
+  background-color: var(--destructive);
+  color: white;
+}
+
+.dark .btn-remove:hover {
+  background-color: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
 }

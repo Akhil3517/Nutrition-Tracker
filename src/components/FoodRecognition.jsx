@@ -206,6 +206,23 @@ const FoodRecognition = ({ onFoodRecognized }) => {
     });
   };
 
+  const handleRemoveFood = (index) => {
+    const updatedFoods = [...recognizedFoodsInternal];
+    updatedFoods.splice(index, 1);
+    setRecognizedFoodsInternal(updatedFoods);
+    
+    const updatedOriginalFoods = [...originalFoods];
+    updatedOriginalFoods.splice(index, 1);
+    setOriginalFoods(updatedOriginalFoods);
+    
+    onFoodRecognized(updatedFoods);
+    
+    toast({
+      title: "Food Removed",
+      description: "Food item has been removed from the list",
+    });
+  };
+
   return (
     <div className="food-recognition">
       <div className="food-recognition-input">
@@ -272,7 +289,16 @@ const FoodRecognition = ({ onFoodRecognized }) => {
               {recognizedFoodsInternal.map((food, index) => (
                 <div key={index} className="recognized-food-card">
                   <div className="recognized-food-info">
-                    <h4>{food.name}</h4>
+                    <div className="food-header">
+                      <h4>{food.name}</h4>
+                      <button
+                        onClick={() => handleRemoveFood(index)}
+                        className="btn-remove"
+                        aria-label="Remove food"
+                      >
+                        ✕
+                      </button>
+                    </div>
                     <div className="food-weight-control">
                       <label htmlFor={`food-weight-${index}`}>Weight (g):</label>
                       <input

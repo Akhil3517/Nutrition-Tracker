@@ -25,6 +25,9 @@ const Sidebar = () => {
         <li className={location.pathname === '/food-suggestions' ? 'active' : ''}>
           <Link to="/food-suggestions">Food Suggestions</Link>
         </li>
+        <li className={location.pathname === '/nutrition-education' ? 'active' : ''}>
+          <Link to="/nutrition-education">Nutrition Education</Link>
+        </li>
       </ul>
     </div>
   );

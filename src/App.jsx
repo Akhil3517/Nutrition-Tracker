@@ -12,9 +12,10 @@ import MealLog from "./pages/MealLog";
 import FoodSuggestionsPage from "./pages/FoodSuggestionsPage";
 import MealPlanningPage from "./pages/MealPlanningPage";
 import Profile from "./pages/Profile";
-import Education from "./pages/Education";
+import NutritionEducationPage from "./pages/NutritionEducationPage";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +29,11 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/login" element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              } />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
@@ -54,9 +59,9 @@ const App = () => (
                   <Profile />
                 </ProtectedRoute>
               } />
-              <Route path="/education" element={
+              <Route path="/nutrition-education" element={
                 <ProtectedRoute>
-                  <Education />
+                  <NutritionEducationPage />
                 </ProtectedRoute>
               } />
               <Route path="/tracker" element={

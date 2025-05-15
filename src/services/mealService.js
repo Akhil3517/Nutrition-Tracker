@@ -1,12 +1,35 @@
-
-import axios from 'axios';
-
-const API_URL = 'http://localhost:5000/api';
+import { 
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  deleteDoc,
+  query,
+  where,
+  orderBy
+} from 'firebase/firestore';
+import { db } from '../config/firebase';
+import { auth } from '../config/firebase';
 
 export const fetchMeals = async () => {
   try {
-    const response = await axios.get(`${API_URL}/meals`);
-    return response.data;
+    if (!auth.currentUser) {
+      throw new Error('User must be authenticated');
+    }
+
+    const mealsRef = collection(db, 'meals');
+    const q = query(
+      mealsRef,
+      where('userId', '==', auth.currentUser.uid),
+      orderBy('date', 'desc')
+    );
+    const querySnapshot = await getDocs(q);
+    
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
   } catch (error) {
     console.error('Error fetching meals:', error);
     throw error;
@@ -15,8 +38,22 @@ export const fetchMeals = async () => {
 
 export const addMeal = async (meal) => {
   try {
-    const response = await axios.post(`${API_URL}/meals`, meal);
-    return response.data;
+    if (!auth.currentUser) {
+      throw new Error('User must be authenticated');
+    }
+
+    const mealsRef = collection(db, 'meals');
+    const newMealRef = doc(mealsRef);
+    
+    const mealData = {
+      ...meal,
+      id: newMealRef.id,
+      userId: auth.currentUser.uid,
+      createdAt: new Date().toISOString()
+    };
+    
+    await setDoc(newMealRef, mealData);
+    return mealData;
   } catch (error) {
     console.error('Error adding meal:', error);
     throw error;
@@ -25,7 +62,23 @@ export const addMeal = async (meal) => {
 
 export const deleteMeal = async (mealId) => {
   try {
-    await axios.delete(`${API_URL}/meals/${mealId}`);
+    if (!auth.currentUser) {
+      throw new Error('User must be authenticated');
+    }
+
+    const mealRef = doc(db, 'meals', mealId);
+    const mealDoc = await getDoc(mealRef);
+    
+    if (!mealDoc.exists()) {
+      throw new Error('Meal not found');
+    }
+    
+    const mealData = mealDoc.data();
+    if (mealData.userId !== auth.currentUser.uid) {
+      throw new Error('Not authorized to delete this meal');
+    }
+    
+    await deleteDoc(mealRef);
     return true;
   } catch (error) {
     console.error('Error deleting meal:', error);

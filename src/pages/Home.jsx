@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -16,7 +15,7 @@ const Home = () => {
             <p>Track food intake, analyze nutrition, and discover personalized food suggestions with AI-powered recognition.</p>
             <div className="hero-cta">
               <Link to="/tracker" className="btn btn-primary">Start Tracking</Link>
-              <Link to="/education" className="btn btn-secondary">Learn More</Link>
+              <Link to="/nutrition-education" className="btn btn-secondary">Learn More</Link>
             </div>
           </div>
         </div>
@@ -43,11 +42,11 @@ const Home = () => {
               <h3>Food Suggestions</h3>
               <p>Get personalized food recommendations based on your dietary preferences and goals.</p>
             </div>
-            
+
             <div className="feature-card">
-              <div className="feature-icon">📚</div>
-              <h3>Nutrition Education</h3>
-              <p>Learn about nutrition basics and how to maintain a balanced diet for optimal health.</p>
+              <div className="feature-icon">📅</div>
+              <h3>Meal Planning</h3>
+              <p>Plan your meals ahead of time with our intuitive meal planning tool to stay on track with your nutrition goals.</p>
             </div>
           </div>
         </div>
@@ -83,8 +82,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-      
-      
     </div>
   );
 };
