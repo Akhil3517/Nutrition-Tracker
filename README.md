@@ -1,3 +1,4 @@
+
 # NutriTrack
 
 NutriTrack is a nutrition tracking web application built with React, Vite, Firebase, and Tailwind CSS. It allows users to log meals, track daily nutrition, and manage personal nutrition goals.
@@ -20,16 +21,20 @@ NutriTrack is a nutrition tracking web application built with React, Vite, Fireb
 - npm or bun  
 
 ### Installation
-
-1. Clone the repository:
+### 1. Clone the repository:
    ```sh
    git clone https://github.com/Akhil3517/Demo.git
    cd nutrition-tracker-main
-2.Install dependencies:
-  npm install
-Set up your Firebase project:
+```
 
-### Set up your Firebase project:
+### 2. Install dependencies:
+
+```sh
+npm install
+# or
+bun install
+```
+### 3.Set up your Firebase project:
 
 1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/).
 
@@ -63,7 +68,7 @@ Set up your Firebase project:
 
 The app is deployed and accessible at:
 
-[Live Demo](https://nutrition-tracker-five.vercel.app/)
+[Live Link](https://nutrition-tracker-five.vercel.app/)
 
 
 
