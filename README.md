@@ -29,21 +29,26 @@ NutriTrack is a nutrition tracking web application built with React, Vite, Fireb
   npm install
 Set up your Firebase project:
 
-3.Create a Firebase project at Firebase Console.
+### Set up your Firebase project:
 
--Enable Authentication and Firestore Database in your Firebase project.
+1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/).
 
--Copy your Firebase configuration object from the Firebase Console.
+2. Enable **Authentication** and **Firestore Database** in your Firebase project.
 
--Create a .env file in your project root (if it doesn’t exist).
+3. Copy your Firebase configuration object from the Firebase Console.
 
--Add the following environment variables to your .env file, replacing the placeholders with your actual Firebase config values:
-VITE_FIREBASE_API_KEY=your_api_key_here
-VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain_here
-VITE_FIREBASE_PROJECT_ID=your_project_id_here
-VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket_here
-VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id_here
-VITE_FIREBASE_APP_ID=your_app_id_here
+4. Create a `.env` file in your project root (if it doesn’t exist).
+
+5. Add the following environment variables to your `.env` file, replacing the placeholders with your actual Firebase config values:
+
+   ```env
+   VITE_FIREBASE_API_KEY=your_api_key_here
+   VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain_here
+   VITE_FIREBASE_PROJECT_ID=your_project_id_here
+   VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket_here
+   VITE_FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id_here
+   VITE_FIREBASE_APP_ID=your_app_id_here
+
 ## Technologies Used
 
 - React  
