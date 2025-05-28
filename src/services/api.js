@@ -14,15 +14,20 @@ console.log('Current hostname:', window.location.hostname); // Debug log
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000, // 10 second timeout
+  timeout: 30000, // Increased timeout to 30 seconds
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
-  }
+  },
+  withCredentials: true
 });
 
 // Add request interceptor for debugging
 api.interceptors.request.use(request => {
+  // Add CORS headers to every request
+  request.headers['Access-Control-Allow-Origin'] = 'http://localhost:8080';
+  request.headers['Access-Control-Allow-Credentials'] = 'true';
+  
   console.log('Starting Request:', {
     url: request.url,
     method: request.method,
@@ -146,7 +151,14 @@ export const fetchUserProfile = async (email) => {
   try {
     console.log('Fetching profile for email:', email);
     const response = await api.get('/users/profile', {
-      params: { email }
+      params: { email },
+      timeout: 30000, // Increased timeout for this specific request
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:8080',
+        'Access-Control-Allow-Credentials': 'true'
+      }
     });
 
     if (!response.data) {
@@ -186,6 +198,14 @@ export const updateUserProfile = async (email, profileData) => {
     const response = await api.post('/users/profile', {
       email,
       ...profileData
+    }, {
+      timeout: 30000, // Increased timeout for this specific request
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:8080',
+        'Access-Control-Allow-Credentials': 'true'
+      }
     });
 
     if (!response.data) {
