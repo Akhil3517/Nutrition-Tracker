@@ -44,14 +44,20 @@ const __dirname = path.dirname(__filename);
 
 // Basic CORS middleware
 server.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:8080');
+  const allowedOrigins = ['http://localhost:8080', 'https://nutrition-tracker-five.vercel.app'];
+  const origin = req.headers.origin;
+  
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials');
   res.header('Access-Control-Allow-Credentials', 'true');
   
   // Handle preflight
   if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
+    return res.status(200).end();
   }
   next();
 });
@@ -67,8 +73,10 @@ server.use((req, res, next) => {
 
 server.use(express.json());
 
-// Serve static files from the dist directory
-server.use(express.static(path.join(__dirname, 'dist')));
+// Health check endpoint
+server.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 // API Routes
 server.get('/api/users/profile', async (req, res) => {
@@ -223,8 +231,9 @@ server.get('*', (req, res) => {
 });
 
 // Start server
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${isProduction ? 'Production' : 'Development'}`);
   console.log(`Serving static files from: ${path.join(__dirname, 'dist')}`);
+  console.log('Server is ready to accept connections');
 }); 

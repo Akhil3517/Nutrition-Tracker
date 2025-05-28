@@ -24,10 +24,6 @@ const api = axios.create({
 
 // Add request interceptor for debugging
 api.interceptors.request.use(request => {
-  // Add CORS headers to every request
-  request.headers['Access-Control-Allow-Origin'] = 'http://localhost:8080';
-  request.headers['Access-Control-Allow-Credentials'] = 'true';
-  
   console.log('Starting Request:', {
     url: request.url,
     method: request.method,
@@ -76,12 +72,25 @@ api.interceptors.response.use(
           headers: error.config?.headers
         }
       });
+      // Check if server is running
+      checkServerHealth();
     } else {
       console.error('Error setting up request:', error.message);
     }
     return Promise.reject(error);
   }
 );
+
+// Function to check server health
+const checkServerHealth = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/health`);
+    console.log('Server health check:', response.data);
+  } catch (error) {
+    console.error('Server health check failed:', error);
+    console.error('Please make sure the backend server is running on port 5000');
+  }
+};
 
 // Calculate nutrition based on weight (100g is the standard reference)
 export const calculateNutritionByWeight = async (foodName, weightInGrams) => {
@@ -155,9 +164,7 @@ export const fetchUserProfile = async (email) => {
       timeout: 30000, // Increased timeout for this specific request
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:8080',
-        'Access-Control-Allow-Credentials': 'true'
+        'Accept': 'application/json'
       }
     });
 
@@ -202,9 +209,7 @@ export const updateUserProfile = async (email, profileData) => {
       timeout: 30000, // Increased timeout for this specific request
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:8080',
-        'Access-Control-Allow-Credentials': 'true'
+        'Accept': 'application/json'
       }
     });
 
