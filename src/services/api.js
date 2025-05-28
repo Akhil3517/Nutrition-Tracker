@@ -3,7 +3,8 @@ import { processFoodImage, getFoodSuggestions } from './geminiService';
 import { calculateNutritionByWeight as calculateNutrition } from '../utils/nutrientUtils';
 
 // Use environment variable for API URL with fallback
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
+  (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api');
 
 console.log('API Base URL:', API_BASE_URL); // Debug log
 
@@ -53,6 +54,13 @@ api.interceptors.response.use(
       });
     } else if (error.request) {
       console.error('No response received:', error.request);
+      // Add more detailed error information
+      console.error('Request details:', {
+        url: error.config?.url,
+        method: error.config?.method,
+        baseURL: error.config?.baseURL,
+        headers: error.config?.headers
+      });
     } else {
       console.error('Error setting up request:', error.message);
     }
@@ -140,7 +148,8 @@ export const fetchUserProfile = async (email) => {
     console.error('Error fetching user profile:', {
       message: error.message,
       response: error.response?.data,
-      status: error.response?.status
+      status: error.response?.status,
+      config: error.config
     });
     throw error;
   }
@@ -168,7 +177,8 @@ export const updateUserProfile = async (email, profileData) => {
     console.error('Error updating user profile:', {
       message: error.message,
       response: error.response?.data,
-      status: error.response?.status
+      status: error.response?.status,
+      config: error.config
     });
     throw error;
   }

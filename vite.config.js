@@ -49,4 +49,12 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(mode),
+    'process.env.VITE_API_BASE_URL': JSON.stringify(
+      mode === 'production' 
+        ? 'https://nutrition-tracker-five.vercel.app/api'
+        : 'http://localhost:5000/api'
+    )
+  }
 }));
