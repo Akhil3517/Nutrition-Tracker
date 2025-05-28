@@ -4,7 +4,9 @@ import { calculateNutritionByWeight as calculateNutrition } from '../utils/nutri
 
 // Use environment variable for API URL with fallback
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-  (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api');
+  (window.location.hostname === 'localhost' 
+    ? 'http://localhost:5000/api' 
+    : 'https://nutrition-tracker-backend.onrender.com/api');
 
 console.log('API Base URL:', API_BASE_URL); // Debug log
 console.log('Current hostname:', window.location.hostname); // Debug log

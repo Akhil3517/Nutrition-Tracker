@@ -27,11 +27,27 @@ const isProduction = process.env.NODE_ENV === 'production';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// CORS configuration
+const allowedOrigins = [
+  'https://nutrition-tracker-five.vercel.app',
+  'https://nutrition-tracker.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:8080',
+  'http://localhost:5000'
+];
+
 // Middleware
 server.use(cors({
-  origin: isProduction 
-    ? ['https://nutrition-tracker-five.vercel.app', 'https://nutrition-tracker.vercel.app', 'http://localhost:3000']
-    : ['http://localhost:8080', 'http://localhost:5000', 'http://localhost:3000'],
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
   credentials: true
@@ -208,7 +224,5 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${isProduction ? 'Production' : 'Development'}`);
   console.log(`Serving static files from: ${path.join(__dirname, 'dist')}`);
-  console.log('CORS allowed origins:', isProduction 
-    ? ['https://nutrition-tracker-five.vercel.app', 'https://nutrition-tracker.vercel.app', 'http://localhost:3000']
-    : ['http://localhost:8080', 'http://localhost:5000', 'http://localhost:3000']);
+  console.log('CORS allowed origins:', allowedOrigins);
 }); 
