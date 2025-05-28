@@ -1,7 +1,7 @@
 {
-  "name": "vite_react_shadcn_ts",
-  "version": "0.0.0",
+  "name": "nutrition-tracker",
   "private": true,
+  "version": "0.0.0",
   "description": "**URL**: https://lovable.dev/projects/db8188bf-036e-4ff8-a9e2-f39ad2372a7b",
   "homepage": "https://github.com/Akhil3517/Demo#readme",
   "bugs": {
@@ -18,10 +18,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:dev": "vite build --mode development",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -62,10 +61,11 @@
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.5.0",
     "embla-carousel-react": "^8.3.0",
     "express": "^4.21.2",
     "firebase": "^11.7.1",
-    "firebase-admin": "^13.3.0",
+    "firebase-admin": "^13.4.0",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",

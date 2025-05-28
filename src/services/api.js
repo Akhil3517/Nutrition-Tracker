@@ -2,24 +2,68 @@ import axios from 'axios';
 import { processFoodImage, getFoodSuggestions } from './geminiService';
 import { calculateNutritionByWeight as calculateNutrition } from '../utils/nutrientUtils';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
-const API_KEY = import.meta.env.VITE_API_KEY;
+// Use relative URL for API to work with Vite proxy
+const API_BASE_URL = '/api';
+
+console.log('API Base URL:', API_BASE_URL); // Debug log
 
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 10000, // 10 second timeout
   headers: {
-    'Authorization': `Bearer ${API_KEY}`,
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  },
+  withCredentials: true
 });
 
-const API_URL_LOCAL = 'http://localhost:5000/api';
+// Add request interceptor for debugging
+api.interceptors.request.use(request => {
+  console.log('Starting Request:', {
+    url: request.url,
+    method: request.method,
+    data: request.data,
+    params: request.params,
+    fullUrl: `${request.baseURL}${request.url}`
+  });
+  return request;
+}, error => {
+  console.error('Request Error:', error);
+  return Promise.reject(error);
+});
+
+// Add response interceptor for debugging
+api.interceptors.response.use(
+  response => {
+    console.log('Response:', {
+      status: response.status,
+      data: response.data,
+      headers: response.headers
+    });
+    return response;
+  },
+  error => {
+    if (error.response) {
+      console.error('API Error:', {
+        message: error.message,
+        response: error.response.data,
+        status: error.response.status,
+        headers: error.response.headers
+      });
+    } else if (error.request) {
+      console.error('No response received:', error.request);
+    } else {
+      console.error('Error setting up request:', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Calculate nutrition based on weight (100g is the standard reference)
 export const calculateNutritionByWeight = async (foodName, weightInGrams) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/nutrition`, {
+    const response = await api.get('/nutrition', {
       params: {
         food: foodName,
         weight: weightInGrams,
@@ -65,7 +109,7 @@ export const recognizeFood = async (imageData) => {
 // Function to get nutrition information for a food
 export const getNutritionInfo = async (foodName) => {
   try {
-    const response = await axios.get(`${API_URL_LOCAL}/nutrition`, {
+    const response = await api.get('/nutrition', {
       params: { food: foodName }
     });
     return response.data;
@@ -77,25 +121,55 @@ export const getNutritionInfo = async (foodName) => {
 
 // Function to fetch user profile
 export const fetchUserProfile = async (email) => {
+  if (!email) {
+    throw new Error('Email is required');
+  }
+
   try {
-    const response = await axios.get(`${API_BASE_URL}/users/${email}`);
+    console.log('Fetching profile for email:', email);
+    const response = await api.get('/users/profile', {
+      params: { email }
+    });
+
+    if (!response.data) {
+      throw new Error('No data received from server');
+    }
+
     return response.data;
   } catch (error) {
-    console.error('Error fetching user profile:', error);
+    console.error('Error fetching user profile:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status
+    });
     throw error;
   }
 };
 
 // Function to update user profile
 export const updateUserProfile = async (email, profileData) => {
+  if (!email) {
+    throw new Error('Email is required');
+  }
+
   try {
-    const response = await axios.post(`${API_BASE_URL}/users`, {
+    console.log('Updating profile for email:', email, 'with data:', profileData);
+    const response = await api.post('/users/profile', {
       email,
       ...profileData
     });
+
+    if (!response.data) {
+      throw new Error('No response data received from server');
+    }
+
     return response.data;
   } catch (error) {
-    console.error('Error updating user profile:', error);
+    console.error('Error updating user profile:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status
+    });
     throw error;
   }
 };
@@ -103,7 +177,7 @@ export const updateUserProfile = async (email, profileData) => {
 // Function to fetch educational content
 export const fetchEducationalContent = async (topic) => {
   try {
-    const response = await axios.get(`${API_URL_LOCAL}/education`, {
+    const response = await api.get('/education', {
       params: { topic }
     });
     return response.data;

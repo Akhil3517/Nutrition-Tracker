@@ -59,16 +59,34 @@ const Dashboard = () => {
     loadUserData();
   }, [currentUser, navigate]);
 
+  // Listen for nutrition goals updates
   useEffect(() => {
-    const handleStorageChange = () => {
-      const savedGoals = localStorage.getItem('nutritionGoals');
-      if (savedGoals) {
-        setNutritionGoals(JSON.parse(savedGoals));
+    const handleStorageChange = (e) => {
+      if (e.key === 'nutritionGoals') {
+        try {
+          const newGoals = JSON.parse(e.newValue);
+          setNutritionGoals(newGoals);
+        } catch (error) {
+          console.error('Error parsing nutrition goals:', error);
+        }
       }
     };
 
+    // Listen for changes from other tabs/windows
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+
+    // Listen for custom event for changes from the same window
+    const handleGoalsUpdate = (e) => {
+      if (e.detail && e.detail.goals) {
+        setNutritionGoals(e.detail.goals);
+      }
+    };
+    window.addEventListener('nutritionGoalsUpdate', handleGoalsUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('nutritionGoalsUpdate', handleGoalsUpdate);
+    };
   }, []);
 
   const nutritionTotals = foods.reduce((totals, food) => {
@@ -219,86 +237,11 @@ const Dashboard = () => {
           </div>
 
           <div className="nutrition-tracker-section">
-            <div className="nutrition-summary">
-              <h3>Daily Nutrition Summary</h3>
-              <div className="nutrition-cards">
-                <div className="nutrition-card">
-                  <div className="nutrition-icon calories-icon">🔥</div>
-                  <div className="nutrition-info">
-                    <span className="nutrition-value">{nutritionTotals.calories.toFixed(0)}</span>
-                    <span className="nutrition-label">Calories</span>
-                    <div className="progress-bar">
-                      <div 
-                        className="progress-fill calories" 
-                        style={{ 
-                          width: `${progressPercentages.calories}%`,
-                          backgroundColor: progressPercentages.calories > 100 ? 'var(--destructive)' : 'var(--primary)'
-                        }}
-                      />
-                    </div>
-                    <span className="progress-text">{progressPercentages.calories.toFixed(0)}% of {nutritionGoals.calories}</span>
-                  </div>
-                </div>
-                
-                <div className="nutrition-card">
-                  <div className="nutrition-icon protein-icon">🥩</div>
-                  <div className="nutrition-info">
-                    <span className="nutrition-value">{nutritionTotals.protein.toFixed(1)}g</span>
-                    <span className="nutrition-label">Protein</span>
-                    <div className="progress-bar">
-                      <div 
-                        className="progress-fill protein" 
-                        style={{ 
-                          width: `${progressPercentages.protein}%`,
-                          backgroundColor: progressPercentages.protein > 100 ? 'var(--destructive)' : 'var(--primary)'
-                        }}
-                      />
-                    </div>
-                    <span className="progress-text">{progressPercentages.protein.toFixed(0)}% of {nutritionGoals.protein}g</span>
-                  </div>
-                </div>
-                
-                <div className="nutrition-card">
-                  <div className="nutrition-icon carbs-icon">🍚</div>
-                  <div className="nutrition-info">
-                    <span className="nutrition-value">{nutritionTotals.carbs.toFixed(1)}g</span>
-                    <span className="nutrition-label">Carbs</span>
-                    <div className="progress-bar">
-                      <div 
-                        className="progress-fill carbs" 
-                        style={{ 
-                          width: `${progressPercentages.carbs}%`,
-                          backgroundColor: progressPercentages.carbs > 100 ? 'var(--destructive)' : 'var(--primary)'
-                        }}
-                      />
-                    </div>
-                    <span className="progress-text">{progressPercentages.carbs.toFixed(0)}% of {nutritionGoals.carbs}g</span>
-                  </div>
-                </div>
-                
-                <div className="nutrition-card">
-                  <div className="nutrition-icon fat-icon">🥑</div>
-                  <div className="nutrition-info">
-                    <span className="nutrition-value">{nutritionTotals.fat.toFixed(1)}g</span>
-                    <span className="nutrition-label">Fat</span>
-                    <div className="progress-bar">
-                      <div 
-                        className="progress-fill fat" 
-                        style={{ 
-                          width: `${progressPercentages.fat}%`,
-                          backgroundColor: progressPercentages.fat > 100 ? 'var(--destructive)' : 'var(--primary)'
-                        }}
-                      />
-                    </div>
-                    <span className="progress-text">{progressPercentages.fat.toFixed(0)}% of {nutritionGoals.fat}g</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="meal-list-section">
-            <MealList foods={foods} onRemoveFood={handleRemoveFood} />
+            <NutritionTracker
+              nutritionTotals={nutritionTotals}
+              nutritionGoals={nutritionGoals}
+              progressPercentages={progressPercentages}
+            />
           </div>
         </div>
       </div>

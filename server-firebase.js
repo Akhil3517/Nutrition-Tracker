@@ -3,8 +3,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 // Load environment variables
 dotenv.config();
@@ -22,47 +20,44 @@ const db = getFirestore();
 const server = express();
 const PORT = process.env.PORT || 5000;
 
-// Get the directory name
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 // Middleware
 server.use(cors({
-  origin: ['http://localhost:8080', 'http://localhost:5000'],
+  origin: true, // Allow all origins in development
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
-  credentials: true
+  exposedHeaders: ['Content-Length', 'Content-Type']
 }));
-
 server.use(express.json());
 
 // Add request logging middleware
 server.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   console.log('Request headers:', req.headers);
-  console.log('Origin:', req.headers.origin);
   next();
 });
 
-// Serve static files from the dist directory
-server.use(express.static(path.join(__dirname, 'dist')));
+// Error handling middleware
+server.use((err, req, res, next) => {
+  console.error('Global error handler:', err);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    message: err.message
+  });
+});
 
-// API Routes
+// Get user profile
 server.get('/api/users/profile', async (req, res) => {
   try {
     const { email } = req.query;
-    console.log('GET /api/users/profile - Request received');
-    console.log('Query parameters:', req.query);
-    console.log('Headers:', req.headers);
+    console.log('Fetching profile for email:', email);
     
     if (!email) {
       console.log('No email provided in request');
       return res.status(400).json({ error: 'Email is required' });
     }
 
-    console.log('Fetching profile for email:', email);
     const userDoc = await db.collection('users').doc(email).get();
-    console.log('Firestore response:', userDoc.exists ? 'User found' : 'User not found');
     
     if (!userDoc.exists) {
       // If user doesn't exist, create a new one with default values
@@ -77,17 +72,15 @@ server.get('/api/users/profile', async (req, res) => {
         }
       };
       
-      console.log('Creating new user with data:', newUser);
       await db.collection('users').doc(email).set(newUser);
-      console.log('New user created successfully');
+      console.log('Created new user:', newUser);
       return res.json(newUser);
     }
     
-    const userData = userDoc.data();
-    console.log('Sending user data:', userData);
-    res.json(userData);
+    console.log('Sending user data:', userDoc.data());
+    res.json(userDoc.data());
   } catch (error) {
-    console.error('Error in /api/users/profile:', error);
+    console.error('Error fetching user:', error);
     res.status(500).json({ 
       error: 'Failed to fetch user',
       details: error.message 
@@ -95,6 +88,7 @@ server.get('/api/users/profile', async (req, res) => {
   }
 });
 
+// Create or update user
 server.post('/api/users/profile', async (req, res) => {
   try {
     const { email, name, nutritionGoals } = req.body;
@@ -175,30 +169,44 @@ server.post('/api/users/profile', async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error saving user:', error);
+    console.error('Error saving user:', {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      stack: error.stack
+    });
     res.status(500).json({ 
       error: 'Failed to save user',
-      details: error.message
+      details: error.message,
+      code: error.code
     });
   }
 });
 
-// Error handling middleware
-server.use((err, req, res, next) => {
-  console.error('Global error handler:', err);
-  res.status(500).json({
-    error: 'Internal Server Error',
-    message: err.message
-  });
-});
-
-// Handle all other routes by serving the index.html
-server.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+// Update user nutrition goals
+server.put('/api/users/:email/goals', async (req, res) => {
+  try {
+    const userDoc = await db.collection('users').doc(req.params.email).get();
+    if (!userDoc.exists) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    await db.collection('users').doc(req.params.email).update({
+      nutritionGoals: req.body
+    });
+    
+    const updatedDoc = await db.collection('users').doc(req.params.email).get();
+    res.json({ 
+      message: 'Nutrition goals updated successfully', 
+      user: updatedDoc.data() 
+    });
+  } catch (error) {
+    console.error('Error updating nutrition goals:', error);
+    res.status(500).json({ error: 'Failed to update nutrition goals' });
+  }
 });
 
 // Start server
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Serving static files from: ${path.join(__dirname, 'dist')}`);
 }); 
