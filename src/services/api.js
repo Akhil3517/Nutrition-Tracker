@@ -7,6 +7,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ||
   (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api');
 
 console.log('API Base URL:', API_BASE_URL); // Debug log
+console.log('Current hostname:', window.location.hostname); // Debug log
 
 // Create axios instance with default config
 const api = axios.create({
@@ -15,8 +16,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
-  },
-  withCredentials: true
+  }
 });
 
 // Add request interceptor for debugging
@@ -26,7 +26,8 @@ api.interceptors.request.use(request => {
     method: request.method,
     data: request.data,
     params: request.params,
-    fullUrl: `${request.baseURL}${request.url}`
+    fullUrl: `${request.baseURL}${request.url}`,
+    headers: request.headers
   });
   return request;
 }, error => {
@@ -50,16 +51,23 @@ api.interceptors.response.use(
         message: error.message,
         response: error.response.data,
         status: error.response.status,
-        headers: error.response.headers
+        headers: error.response.headers,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method,
+          baseURL: error.config?.baseURL,
+          headers: error.config?.headers
+        }
       });
     } else if (error.request) {
-      console.error('No response received:', error.request);
-      // Add more detailed error information
-      console.error('Request details:', {
-        url: error.config?.url,
-        method: error.config?.method,
-        baseURL: error.config?.baseURL,
-        headers: error.config?.headers
+      console.error('No response received:', {
+        request: error.request,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method,
+          baseURL: error.config?.baseURL,
+          headers: error.config?.headers
+        }
       });
     } else {
       console.error('Error setting up request:', error.message);
@@ -151,7 +159,17 @@ export const fetchUserProfile = async (email) => {
       status: error.response?.status,
       config: error.config
     });
-    throw error;
+    // Return a default user object if the request fails
+    return {
+      email,
+      name: email.split('@')[0],
+      nutritionGoals: {
+        calories: 2000,
+        protein: 150,
+        carbs: 200,
+        fat: 70
+      }
+    };
   }
 };
 

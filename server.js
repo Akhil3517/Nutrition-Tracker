@@ -30,8 +30,8 @@ const __dirname = path.dirname(__filename);
 // Middleware
 server.use(cors({
   origin: isProduction 
-    ? ['https://nutrition-tracker-five.vercel.app', 'https://nutrition-tracker.vercel.app']
-    : ['http://localhost:8080', 'http://localhost:5000'],
+    ? ['https://nutrition-tracker-five.vercel.app', 'https://nutrition-tracker.vercel.app', 'http://localhost:3000']
+    : ['http://localhost:8080', 'http://localhost:5000', 'http://localhost:3000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
   credentials: true
@@ -44,6 +44,7 @@ server.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   console.log('Request headers:', req.headers);
   console.log('Origin:', req.headers.origin);
+  console.log('Environment:', isProduction ? 'Production' : 'Development');
   next();
 });
 
@@ -93,7 +94,8 @@ server.get('/api/users/profile', async (req, res) => {
     console.error('Error in /api/users/profile:', error);
     res.status(500).json({ 
       error: 'Failed to fetch user',
-      details: error.message 
+      details: error.message,
+      stack: isProduction ? undefined : error.stack
     });
   }
 });
@@ -191,7 +193,8 @@ server.use((err, req, res, next) => {
   console.error('Global error handler:', err);
   res.status(500).json({
     error: 'Internal Server Error',
-    message: err.message
+    message: err.message,
+    stack: isProduction ? undefined : err.stack
   });
 });
 
@@ -205,4 +208,7 @@ server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${isProduction ? 'Production' : 'Development'}`);
   console.log(`Serving static files from: ${path.join(__dirname, 'dist')}`);
+  console.log('CORS allowed origins:', isProduction 
+    ? ['https://nutrition-tracker-five.vercel.app', 'https://nutrition-tracker.vercel.app', 'http://localhost:3000']
+    : ['http://localhost:8080', 'http://localhost:5000', 'http://localhost:3000']);
 }); 
