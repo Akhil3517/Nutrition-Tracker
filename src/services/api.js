@@ -2,8 +2,8 @@ import axios from 'axios';
 import { processFoodImage, getFoodSuggestions } from './geminiService';
 import { calculateNutritionByWeight as calculateNutrition } from '../utils/nutrientUtils';
 
-// Use relative URL for API to work with Vite proxy
-const API_BASE_URL = '/api';
+// Use environment variable for API URL with fallback
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 console.log('API Base URL:', API_BASE_URL); // Debug log
 

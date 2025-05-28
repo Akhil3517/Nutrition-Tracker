@@ -21,6 +21,7 @@ const app = initializeApp({
 const db = getFirestore();
 const server = express();
 const PORT = process.env.PORT || 5000;
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Get the directory name
 const __filename = fileURLToPath(import.meta.url);
@@ -28,7 +29,9 @@ const __dirname = path.dirname(__filename);
 
 // Middleware
 server.use(cors({
-  origin: ['http://localhost:8080', 'http://localhost:5000'],
+  origin: isProduction 
+    ? ['https://nutrition-tracker-five.vercel.app', 'https://nutrition-tracker.vercel.app']
+    : ['http://localhost:8080', 'http://localhost:5000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
   credentials: true
@@ -200,5 +203,6 @@ server.get('*', (req, res) => {
 // Start server
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${isProduction ? 'Production' : 'Development'}`);
   console.log(`Serving static files from: ${path.join(__dirname, 'dist')}`);
 }); 

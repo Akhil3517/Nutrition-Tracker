@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    proxy: {
+    proxy: mode === 'development' ? {
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => ({
           });
         }
       }
-    }
+    } : undefined
   },
   plugins: [
     react(),
@@ -36,6 +36,17 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+        },
+      },
     },
   },
 }));
